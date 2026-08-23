@@ -19,11 +19,20 @@ CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE TABLE IF NOT EXISTS early_access_signups (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   email VARCHAR(255) UNIQUE NOT NULL,
+  firebase_uid VARCHAR(255),
+  name VARCHAR(255),
   source VARCHAR(100) DEFAULT 'website',
-  subscribed_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+  email_verified BOOLEAN DEFAULT FALSE,
+  admin_note TEXT,
+  reviewed_at TIMESTAMPTZ,
+  subscribed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE INDEX IF NOT EXISTS idx_early_access_email ON early_access_signups(email);
+CREATE INDEX IF NOT EXISTS idx_early_access_status ON early_access_signups(status);
+CREATE INDEX IF NOT EXISTS idx_early_access_firebase_uid ON early_access_signups(firebase_uid);
 
 -- Chat conversations
 CREATE TABLE IF NOT EXISTS conversations (

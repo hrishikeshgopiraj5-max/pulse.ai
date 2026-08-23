@@ -1068,8 +1068,88 @@ section.alt {
   color: var(--red-dark);
 }
 
+/* Early access signup form - multi-field */
+.early-access-signup {
+  flex-direction: column;
+  align-items: center;
+  max-width: 440px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.early-access-signup input {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  width: 100%;
+  background: var(--white);
+  color: var(--ink);
+  transition: border-color 0.2s;
+}
+
+.early-access-signup input:focus {
+  border-color: var(--red);
+  outline: none;
+}
+
+.early-access-signup .btn {
+  width: 100%;
+  margin-top: 4px;
+}
+
+/* Pending approval screen */
+.pending-approval {
+  text-align: center;
+  max-width: 480px;
+  margin: 30px auto 0;
+  padding: 36px 28px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+}
+
+.pending-icon {
+  margin-bottom: 16px;
+}
+
+.pending-icon svg {
+  display: inline-block;
+  animation: pulse-clock 2s ease-in-out infinite;
+}
+
+@keyframes pulse-clock {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+.pending-approval h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.pending-approval p {
+  font-size: 15px;
+  color: var(--ink-muted);
+  line-height: 1.6;
+}
+
+.pending-email {
+  margin-top: 16px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  color: var(--ink-faint);
+  background: var(--bg-alt);
+  padding: 8px 16px;
+  border-radius: 100px;
+  display: inline-block;
+}
+
 @media (max-width: 480px) {
-  .early-access-form {
+  .early-access-form:not(.early-access-signup) {
     flex-direction: column;
     align-items: stretch;
   }

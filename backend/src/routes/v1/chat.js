@@ -6,14 +6,14 @@
 
 const { Router } = require("express");
 const AIController = require("../../controllers/AIController");
-const { requireAuth } = require("../../middleware/firebaseAuth");
+const { requireApproved } = require("../../middleware/firebaseAuth");
 const { validate } = require("../../middleware/validate");
 const { schemas } = require("../../lib/validation");
 
 const router = Router();
 
 // All chat routes require Firebase auth
-router.use(requireAuth);
+router.use(requireApproved);
 
 router.post("/", validate(schemas.chat), AIController.sendMessage);
 router.get("/conversations", AIController.listConversations);

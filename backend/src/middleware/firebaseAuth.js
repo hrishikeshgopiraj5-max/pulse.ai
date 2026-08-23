@@ -89,4 +89,51 @@ async function optionalAuth(req, res, next) {
   next();
 }
 
-module.exports = { requireAuth, optionalAuth };
+/**
+ * Required Firebase authentication + early access approval check.
+ * Verifies the token, then ensures the user has been approved by admin.
+ */
+async function requireApproved(req, res, next) {
+  const header = req.headers.authorization;
+
+  if (!header || !header.startsWith("Bearer ")) {
+    return res.status(401).json({ detail: "Authentication required." });
+  }
+
+  if (!firebaseReady) {
+    return res.status(503).json({ detail: "Authentication service not configured." });
+  }
+
+  try {
+    // Step 1: Verify Firebase token
+    const decodedToken = await admin.auth().verifyIdToken(header.split(" ")[1]);
+    req.user = {
+      uid: decodedToken.uid,
+      email: decodedToken.email,
+      name: decodedToken.name || null,
+    };
+
+    // Step 2: Check early access approval status
+    const { EarlyAccess } = require("../models");
+    const entry = await EarlyAccess.findByFirebaseUid(req.user.uid);
+
+    if (!entry) {
+      return res.status(403).json({ detail: "You have not signed up for early access yet." });
+    }
+    if (entry.status === "pending") {
+      return res.status(403).json({ detail: "Your account is pending admin approval. Please wait for approval before using Pulse AI.", status: "pending" });
+    }
+    if (entry.status === "rejected") {
+      return res.status(403).json({ detail: "Your early access request was not approved.", status: "rejected" });
+    }
+
+    // Approved — attach the early access record and continue
+    req.earlyAccess = entry;
+    next();
+  } catch (err) {
+    logger.warn({ err: err.message }, "Auth/approval check failed");
+    return res.status(401).json({ detail: "Invalid or expired token." });
+  }
+}
+
+module.exports = { requireAuth, optionalAuth, requireApproved };

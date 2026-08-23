@@ -4,13 +4,18 @@
 
 const { Router } = require("express");
 const EarlyAccessController = require("../../controllers/EarlyAccessController");
-const { validate } = require("../../middleware/validate");
-const { schemas } = require("../../lib/validation");
+const { requireAdmin } = require("../../middleware/adminAuth");
 
 const router = Router();
 
-router.post("/", validate(schemas.earlyAccess), EarlyAccessController.subscribe);
-router.get("/count", EarlyAccessController.count);
-router.get("/", EarlyAccessController.list);
+// Public routes
+router.post("/", EarlyAccessController.subscribe);
+router.get("/status", EarlyAccessController.getStatus);
+router.get("/count", requireAdmin, EarlyAccessController.count);
+
+// Admin routes (protected by admin key)
+router.get("/", requireAdmin, EarlyAccessController.list);
+router.post("/:id/approve", requireAdmin, EarlyAccessController.approve);
+router.post("/:id/reject", requireAdmin, EarlyAccessController.reject);
 
 module.exports = router;

@@ -59,6 +59,9 @@ const config = Object.freeze({
   FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL || "",
   FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY || "",
 
+  // Admin
+  ADMIN_SECRET_KEY: process.env.ADMIN_SECRET_KEY || "",
+
   // OpenRouter AI
   OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY || "",
   OPENROUTER_BASE_URL: process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1",

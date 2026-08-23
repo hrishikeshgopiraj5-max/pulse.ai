@@ -71,14 +71,44 @@
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       loginError.textContent = '';
+
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
       try {
-        await Auth.login(
-          document.getElementById('loginEmail').value.trim(),
-          document.getElementById('loginPassword').value
-        );
+        // Step 1: Firebase login
+        await Auth.login(email, password);
+
+        // Step 2: Check if user is approved for early access
+        loginError.textContent = 'Checking access status...';
+        loginError.style.color = 'var(--ink-muted)';
+        const statusRes = await fetch(`${API}/early-access/status?email=${encodeURIComponent(email)}`);
+        const statusData = await statusRes.json();
+        const userStatus = statusData?.data?.status;
+
+        if (!statusRes.ok || !userStatus || userStatus === 'pending') {
+          // Not signed up or pending — sign out and show message
+          await Auth.logout();
+          loginError.textContent = 'Your account is pending admin approval. You\'ll be able to log in once approved.';
+          loginError.style.color = '';
+          return;
+        }
+        if (userStatus === 'rejected') {
+          await Auth.logout();
+          loginError.textContent = 'Your early access request was not approved.';
+          loginError.style.color = '';
+          return;
+        }
+
+        // Step 3: Approved — grant access
+        loginError.textContent = '';
+        loginError.style.color = '';
         closeAuthModal();
       } catch (err) {
-        loginError.textContent = friendlyError(err.code);
+        loginError.textContent = friendlyError(err.code) || 'Something went wrong. Please try again.';
+        loginError.style.color = '';
+        // Make sure we're signed out if anything failed
+        try { await Auth.logout(); } catch {}
       }
     });
   }
@@ -109,11 +139,26 @@
     });
   }
 
-  // ─── Auth state → update nav ─────────────────────────────
-  Auth.onAuthChange((user) => {
+  // ─── Auth state → redirect approved users to /chat ───────
+  Auth.onAuthChange(async (user) => {
     if (user) {
-      navAuthGuest.style.display = 'none';
-      navAuthUser.style.display = 'block';
+      // Check approval status, then redirect approved users to chat
+      try {
+        const statusRes = await fetch(`${API}/early-access/status?email=${encodeURIComponent(user.email)}`);
+        const statusData = await statusRes.json();
+        const userStatus = statusData?.data?.status;
+        if (statusRes.ok && userStatus === 'approved') {
+          // Approved user on landing page → redirect to chat
+          window.location.href = '/chat.html';
+          return;
+        }
+        // Not approved — sign out
+        await Auth.logout();
+      } catch {
+        // Network error — show guest nav
+      }
+      navAuthGuest.style.display = 'block';
+      navAuthUser.style.display = 'none';
     } else {
       navAuthGuest.style.display = 'block';
       navAuthUser.style.display = 'none';
@@ -145,33 +190,77 @@
 
   // ─── Early-access form ───────────────────────────────────
   const form = document.getElementById('earlyAccessForm');
+  const nameInput = document.getElementById('earlyAccessName');
   const emailInput = document.getElementById('earlyAccessEmail');
+  const passwordInput = document.getElementById('earlyAccessPassword');
   const status = document.getElementById('earlyAccessStatus');
+  const pendingApproval = document.getElementById('pendingApproval');
+  const pendingEmail = document.getElementById('pendingEmail');
 
   if (form) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      status.textContent = 'Joining...';
+      status.textContent = 'Creating your account...';
       status.className = 'form-status';
 
+      const name = nameInput ? nameInput.value.trim() : '';
+      const email = emailInput.value.trim();
+      const password = passwordInput ? passwordInput.value : '';
+
+      if (!email || !password) {
+        status.textContent = 'Please fill in all fields.';
+        status.className = 'form-status error';
+        return;
+      }
+
+      if (password.length < 6) {
+        status.textContent = 'Password must be at least 6 characters.';
+        status.className = 'form-status error';
+        return;
+      }
+
       try {
+        // Step 1: Create Firebase Auth account
+        status.textContent = 'Creating your account...';
+        const cred = await firebase.auth().createUserWithEmailAndPassword(email, password);
+
+        // Step 2: Update display name
+        if (name) {
+          await cred.user.updateProfile({ displayName: name });
+        }
+
+        // Step 3: Send email verification
+        status.textContent = 'Sending verification email...';
+        await cred.user.sendEmailVerification();
+
+        // Step 4: Save to backend early access table
+        status.textContent = 'Registering for early access...';
         const res = await fetch(`${API}/early-access`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: emailInput.value.trim() }),
+          body: JSON.stringify({
+            email: email,
+            firebase_uid: cred.user.uid,
+            name: name,
+            source: 'website',
+          }),
         });
         const data = await res.json();
 
-        if (res.ok) {
-          status.textContent = data.message || "You're on the list.";
-          status.className = 'form-status success';
-          form.reset();
-        } else {
-          status.textContent = data.detail || 'Something went wrong.';
-          status.className = 'form-status error';
+        // Step 5: Sign out and show pending screen
+        await firebase.auth().signOut();
+
+        // Hide form, show pending approval
+        form.style.display = 'none';
+        if (pendingApproval) {
+          pendingApproval.style.display = 'block';
+          pendingEmail.textContent = email;
         }
-      } catch {
-        status.textContent = 'Could not reach the server.';
+        status.textContent = '';
+
+      } catch (err) {
+        console.error('Early access signup error:', err);
+        status.textContent = friendlyError(err.code) || 'Something went wrong. Please try again.';
         status.className = 'form-status error';
       }
     });
@@ -261,8 +350,9 @@
       if (res.ok && data.data) {
         conversationId = data.data.conversationId;
         addMessage('assistant', data.data.message.content);
-      } else if (res.status === 401) {
-        addMessage('assistant', 'Please log in to use the chat.');
+      } else if (res.status === 401 || res.status === 403) {
+        addMessage('assistant', data.detail || 'Access denied. Your account may not be approved yet.');
+        try { await Auth.logout(); } catch {}
         openAuthModal('login');
       } else {
         addMessage('assistant', data.detail || 'Something went wrong.');

@@ -336,11 +336,26 @@
         <span class="eyebrow" style="justify-content:center;">Get involved</span>
         <h2 style="margin-top:14px;">Healthcare shouldn't feel complicated.<br>Join us as we build Pulse AI.</h2>
         <p>Be part of the early access group as we build a more understandable, navigable healthcare experience.</p>
-        <form id="earlyAccessForm" class="early-access-form" novalidate>
+        <form id="earlyAccessForm" class="early-access-form early-access-signup" novalidate>
+          <input type="text" id="earlyAccessName" name="name" placeholder="Your name" required aria-label="Full name">
           <input type="email" id="earlyAccessEmail" name="email" placeholder="you@email.com" required aria-label="Email address">
+          <input type="password" id="earlyAccessPassword" name="password" placeholder="Create a password (min 6 chars)" required minlength="6" aria-label="Password">
           <button type="submit" class="btn btn-primary">Get Early Access</button>
         </form>
         <p id="earlyAccessStatus" class="form-status" role="status" aria-live="polite"></p>
+
+        <!-- Pending approval screen (hidden by default) -->
+        <div id="pendingApproval" class="pending-approval" style="display:none;">
+          <div class="pending-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#DC2F3D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <h3>Waiting for Admin Approval</h3>
+          <p>Your account has been created. An admin will review and approve your access soon. You'll be able to log in once approved.</p>
+          <p class="pending-email" id="pendingEmail"></p>
+        </div>
       </div>
     </section>
 
