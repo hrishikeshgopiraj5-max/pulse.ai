@@ -67,34 +67,63 @@
   if (authBackdrop) authBackdrop.addEventListener('click', closeAuthModal);
 
   // ─── Login form ──────────────────────────────────────────
+  let loginInProgress = false;
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      loginError.textContent = '';
+      if (loginInProgress) return; // Prevent double-submit
+      loginInProgress = true;
 
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPassword').value;
+      const submitBtn = loginForm.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn ? submitBtn.textContent : '';
 
       try {
+        loginError.textContent = '';
+        loginError.style.color = '';
+
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        if (!email || !password) {
+          loginError.textContent = 'Please enter email and password.';
+          return;
+        }
+
+        // Disable button during auth
+        if (submitBtn) {
+          submitBtn.textContent = 'Logging in...';
+          submitBtn.disabled = true;
+        }
+
         // Step 1: Firebase login
         await Auth.login(email, password);
 
         // Step 2: Check if user is approved for early access
         loginError.textContent = 'Checking access status...';
         loginError.style.color = 'var(--ink-muted)';
-        const statusRes = await fetch(`${API}/early-access/status?email=${encodeURIComponent(email)}`);
-        const statusData = await statusRes.json();
+
+        let statusRes;
+        try {
+          statusRes = await fetch(`${API}/early-access/status?email=${encodeURIComponent(email)}`);
+        } catch (networkErr) {
+          // Network error — sign out and show error
+          await Auth.logout().catch(() => {});
+          loginError.textContent = 'Could not verify access status. Check your connection and try again.';
+          loginError.style.color = '';
+          return;
+        }
+
+        const statusData = await statusRes.json().catch(() => ({}));
         const userStatus = statusData?.data?.status;
 
         if (!statusRes.ok || !userStatus || userStatus === 'pending') {
-          // Not signed up or pending — sign out and show message
-          await Auth.logout();
+          await Auth.logout().catch(() => {});
           loginError.textContent = 'Your account is pending admin approval. You\'ll be able to log in once approved.';
           loginError.style.color = '';
           return;
         }
         if (userStatus === 'rejected') {
-          await Auth.logout();
+          await Auth.logout().catch(() => {});
           loginError.textContent = 'Your early access request was not approved.';
           loginError.style.color = '';
           return;
@@ -107,8 +136,13 @@
       } catch (err) {
         loginError.textContent = friendlyError(err.code) || 'Something went wrong. Please try again.';
         loginError.style.color = '';
-        // Make sure we're signed out if anything failed
-        try { await Auth.logout(); } catch {}
+        try { await Auth.logout().catch(() => {}); } catch {}
+      } finally {
+        loginInProgress = false;
+        if (submitBtn) {
+          submitBtn.textContent = originalBtnText;
+          submitBtn.disabled = false;
+        }
       }
     });
   }
@@ -219,35 +253,59 @@
         return;
       }
 
+      let firebaseUser = null;
       try {
         // Step 1: Create Firebase Auth account
         status.textContent = 'Creating your account...';
         const cred = await firebase.auth().createUserWithEmailAndPassword(email, password);
+        firebaseUser = cred.user;
 
         // Step 2: Update display name
         if (name) {
-          await cred.user.updateProfile({ displayName: name });
+          await firebaseUser.updateProfile({ displayName: name });
         }
 
-        // Step 3: Send email verification
+        // Step 3: Send email verification (non-blocking — don't fail if this errors)
         status.textContent = 'Sending verification email...';
-        await cred.user.sendEmailVerification();
+        firebaseUser.sendEmailVerification().catch(() => {
+          // Email verification failed — not critical, continue
+          console.warn('Email verification could not be sent');
+        });
 
         // Step 4: Save to backend early access table
         status.textContent = 'Registering for early access...';
-        const res = await fetch(`${API}/early-access`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: email,
-            firebase_uid: cred.user.uid,
-            name: name,
-            source: 'website',
-          }),
-        });
-        const data = await res.json();
+        let res;
+        try {
+          res = await fetch(`${API}/early-access`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: email,
+              firebase_uid: firebaseUser.uid,
+              name: name,
+              source: 'website',
+            }),
+          });
+        } catch (networkErr) {
+          // Network error — Firebase account exists but backend registration failed
+          // Sign out and tell user to try again (their Firebase account exists, so they can log in)
+          await firebase.auth().signOut();
+          status.textContent = 'Account created but registration failed. Please try logging in.';
+          status.className = 'form-status error';
+          return;
+        }
 
-        // Step 5: Sign out and show pending screen
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          // Backend rejected — e.g. duplicate email in early access table
+          await firebase.auth().signOut();
+          status.textContent = data.detail || 'Registration failed. Please try again.';
+          status.className = 'form-status error';
+          return;
+        }
+
+        // Step 5: Success — sign out and show pending screen
         await firebase.auth().signOut();
 
         // Hide form, show pending approval
@@ -260,6 +318,10 @@
 
       } catch (err) {
         console.error('Early access signup error:', err);
+        // If Firebase account was created but something else failed, clean up
+        if (firebaseUser) {
+          try { await firebase.auth().signOut(); } catch {}
+        }
         status.textContent = friendlyError(err.code) || 'Something went wrong. Please try again.';
         status.className = 'form-status error';
       }

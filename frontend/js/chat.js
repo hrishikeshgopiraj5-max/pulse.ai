@@ -27,24 +27,30 @@
   let isSending = false;
 
   // ─── Auth gate ─────────────────────────────────────────────
+  let authChecked = false;
   Auth.onAuthChange(async (user) => {
     if (!user) {
       window.location.href = '/';
       return;
     }
 
-    // Check approval status
-    try {
-      const statusRes = await fetch(`${API}/early-access/status?email=${encodeURIComponent(user.email)}`);
-      const statusData = await statusRes.json();
-      const userStatus = statusData?.data?.status;
-      if (!statusRes.ok || !userStatus || userStatus !== 'approved') {
-        await Auth.logout();
-        window.location.href = '/';
-        return;
+    // Only check approval status once on page load (not on every auth change)
+    if (!authChecked) {
+      authChecked = true;
+      try {
+        const statusRes = await fetch(`${API}/early-access/status?email=${encodeURIComponent(user.email)}`);
+        const statusData = await statusRes.json().catch(() => ({}));
+        const userStatus = statusData?.data?.status;
+        if (!statusRes.ok || !userStatus || userStatus !== 'approved') {
+          await Auth.logout().catch(() => {});
+          window.location.href = '/';
+          return;
+        }
+      } catch (networkErr) {
+        // Network error on page load — show warning but let them stay
+        // Chat will handle 403s when they try to send a message
+        console.warn('Could not verify approval status:', networkErr.message);
       }
-    } catch {
-      // Network error — let them stay, chat will handle 403s
     }
 
     // Show user info
@@ -269,6 +275,7 @@
 
     isSending = true;
     chatSend.disabled = true;
+    chatInput.disabled = true;
 
     addMessage('user', text.trim());
     chatInput.value = '';
@@ -277,6 +284,16 @@
 
     try {
       const token = await Auth.getIdToken();
+      if (!token) {
+        removeTyping();
+        addMessage('assistant', 'Your session has expired. Please log in again.');
+        setTimeout(async () => {
+          await Auth.logout().catch(() => {});
+          window.location.href = '/';
+        }, 2000);
+        return;
+      }
+
       const res = await fetch(`${API}/chat`, {
         method: 'POST',
         headers: {
@@ -285,32 +302,48 @@
         },
         body: JSON.stringify({ conversationId: currentConversationId, message: text.trim() }),
       });
-      const data = await res.json();
+
+      const data = await res.json().catch(() => ({}));
 
       removeTyping();
 
       if (res.ok && data.data) {
         currentConversationId = data.data.conversationId;
-        chatTopbarTitle.textContent = data.data.message.content.substring(0, 50) + (data.data.message.content.length > 50 ? '...' : '');
-        addMessage('assistant', data.data.message.content);
+        const content = data.data.message.content;
+        chatTopbarTitle.textContent = content.substring(0, 50) + (content.length > 50 ? '...' : '');
+        addMessage('assistant', content);
         loadConversations();
-      } else if (res.status === 401 || res.status === 403) {
-        addMessage('assistant', data.detail || 'Access denied. Please log in again.');
+      } else if (res.status === 401) {
+        addMessage('assistant', 'Your session has expired. Please log in again.');
         setTimeout(async () => {
-          await Auth.logout();
+          await Auth.logout().catch(() => {});
           window.location.href = '/';
         }, 2000);
+      } else if (res.status === 403) {
+        const detail = data.detail || 'Your access has been revoked. Please contact support.';
+        addMessage('assistant', detail);
+        setTimeout(async () => {
+          await Auth.logout().catch(() => {});
+          window.location.href = '/';
+        }, 3000);
+      } else if (res.status === 429) {
+        addMessage('assistant', 'You\'re sending messages too quickly. Please wait a moment and try again.');
       } else {
         addMessage('assistant', data.detail || 'Something went wrong. Please try again.');
       }
-    } catch {
+    } catch (networkErr) {
       removeTyping();
-      addMessage('assistant', 'Could not reach the server. Please check your connection and try again.');
+      if (networkErr.name === 'TypeError' && networkErr.message.includes('fetch')) {
+        addMessage('assistant', 'Could not reach the server. Please check your internet connection and try again.');
+      } else {
+        addMessage('assistant', 'An unexpected error occurred. Please try again.');
+      }
+    } finally {
+      isSending = false;
+      chatSend.disabled = false;
+      chatInput.disabled = false;
+      chatInput.focus();
     }
-
-    isSending = false;
-    chatSend.disabled = false;
-    chatInput.focus();
   }
 
   // ─── Form submit ───────────────────────────────────────────

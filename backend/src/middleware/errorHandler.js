@@ -30,9 +30,16 @@ function errorHandler(err, req, res, _next) {
     logger.warn({ err, requestId: req.id }, err.message);
   }
 
-  // Send response
+  // Send response — never leak internals in production
   const message = err.isOperational ? err.message : "An unexpected error occurred.";
-  res.status(statusCode).json(error(message, { requestId: req.id }));
+  const meta = {};
+
+  // Only include request ID in non-production for debugging
+  if (process.env.NODE_ENV !== "production") {
+    meta.requestId = req.id;
+  }
+
+  res.status(statusCode).json(error(message, meta));
 }
 
 module.exports = { notFoundHandler, errorHandler };

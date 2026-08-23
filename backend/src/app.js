@@ -14,6 +14,7 @@ const config = require("./config");
 const routes = require("./routes");
 const { requestId } = require("./middleware/requestId");
 const { requestLogger } = require("./middleware/requestLogger");
+const { sanitize } = require("./middleware/sanitize");
 const { notFoundHandler, errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
@@ -75,6 +76,9 @@ app.use(
 // ─── Body Parsing ───────────────────────────────────────────
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+
+// ─── Input Sanitization ──────────────────────────────────
+app.use(sanitize);
 
 // ─── Request Logging ────────────────────────────────────────
 app.use(requestLogger);

@@ -15,11 +15,19 @@ if (fs.existsSync(envPath)) {
 
 // ─── Fail fast in production ─────────────────────────────────
 if (process.env.NODE_ENV === "production") {
-  const required = ["JWT_SECRET", "DATABASE_URL"];
+  const required = ["DATABASE_URL", "ADMIN_SECRET_KEY"];
+  const recommended = ["FIREBASE_PROJECT_ID", "FIREBASE_CLIENT_EMAIL", "FIREBASE_PRIVATE_KEY", "OPENROUTER_API_KEY"];
+
   for (const key of required) {
     if (!process.env[key]) {
-      console.error(`\n❌ Missing required environment variable: ${key}\n`);
+      console.error(`\n❌ Missing REQUIRED environment variable: ${key}\n`);
       process.exit(1);
+    }
+  }
+
+  for (const key of recommended) {
+    if (!process.env[key]) {
+      console.warn(`\n⚠️  Missing recommended environment variable: ${key} — some features may not work\n`);
     }
   }
 }
