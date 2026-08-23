@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: pulse-ai-api
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node src/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false  # Set manually in Render dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        sync: false  # Set to your Vercel URL
+      - key: CORS_ORIGINS
+        sync: false  # Set to your Vercel URL
+      - key: OPENROUTER_API_KEY
+        sync: false  # Set manually
+      - key: OPENROUTER_PRIMARY_MODEL
+        value: deepseek/deepseek-chat-v3-0324:free
+      - key: OPENROUTER_FALLBACK_MODELS
+        value: google/gemma-2-9b-it:free,mistralai/mistral-7b-instruct:free
+    healthCheckPath: /api/v1/health

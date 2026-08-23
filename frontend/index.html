@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pulse AI — Healthcare guidance, powered by intelligence</title>
+
+  <!-- Meta -->
+  <meta name="description" content="Pulse AI is building a smarter way to understand health information, navigate care, and connect with the right healthcare support. An AI-powered healthcare assistance platform — not a replacement for professional medical care.">
+  <meta name="keywords" content="Pulse AI, healthcare assistant, AI health guidance, health information, doctor discovery, pharmacy, healthcare navigation">
+  <meta property="og:title" content="Pulse AI — Healthcare guidance, powered by intelligence">
+  <meta property="og:description" content="A smarter way to understand health information, navigate care, and connect with the right healthcare support.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#FCFCFB">
+
+  <!-- Favicon -->
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- API Configuration -->
+  <script>window.__PULSE_API_URL__ = 'https://pulse-ai-r2d1.onrender.com/api/v1';</script>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+</head>
+<body>
+
+  <!-- ========== HEADER / NAV ========== -->
+  <header id="siteHeader">
+    <nav class="wrap">
+      <a href="#top" class="logo">
+        <svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true">
+          <circle cx="32" cy="32" r="30" fill="#DC2F3D"/>
+          <path d="M8 32H22L27 18L36 46L41 32H56" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Pulse AI
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#problem">Problem</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#vision">Vision</a></li>
+        <li><a href="#roadmap">Roadmap</a></li>
+        <li><a href="#team">Team</a></li>
+        <li id="navAuthGuest"><a href="#early-access" class="nav-cta">Join Early Access</a></li>
+        <li id="navAuthUser" style="display:none;"><a href="#" class="nav-cta" id="navLogoutBtn">Logout</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <main id="top">
+
+    <!-- ========== HERO ========== -->
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-copy">
+          <span class="eyebrow">Early-stage · Building in the open</span>
+          <h1>Healthcare guidance, <em>powered by intelligence.</em></h1>
+          <p class="lead">Pulse AI is building a smarter way to understand health information, navigate care, and connect with the right healthcare support.</p>
+          <div class="hero-ctas">
+            <a href="#early-access" class="btn btn-primary">Join the Early Access</a>
+            <a href="#solution" class="btn btn-secondary">Explore Pulse AI</a>
+          </div>
+          <p class="hero-note">Pulse AI is an information &amp; navigation platform — not a doctor, and not a diagnostic tool.</p>
+        </div>
+        <div class="hero-visual">
+          <div class="panel">
+            <div class="panel-top">
+              <span class="panel-label">PULSE AI — ASSISTANT</span>
+              <div class="panel-dot-row"><span></span><span></span><span></span></div>
+            </div>
+            <div class="chat-bubble user">I've had a mild headache for two days. What should I do?</div>
+            <div class="chat-bubble">Here's some general information on possible causes, and guidance on when it's a good idea to speak with a doctor.</div>
+            <svg class="pulse-graph" viewBox="0 0 340 64" aria-hidden="true">
+              <path class="pg-path" d="M0,32 L60,32 L78,10 L96,54 L112,32 L150,32 L164,20 L178,44 L192,32 L340,32"/>
+            </svg>
+            <span class="panel-tag">Guidance, not diagnosis</span>
+            <p class="panel-caption">Illustrative product preview — Pulse AI is in early development.</p>
+          </div>
+          <div class="float-chip chip-1">Ask → Understand</div>
+          <div class="float-chip chip-2">Guidance → Care</div>
+        </div>
+      </div>
+    </section>
+
+    <svg class="pulse-rule" viewBox="0 0 1180 22" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,11 L520,11 L534,2 L548,20 L562,11 L1180,11"/>
+    </svg>
+
+    <!-- ========== PROBLEM ========== -->
+    <section id="problem">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">The problem</span>
+          <h2>Healthcare information is everywhere. Clarity isn't.</h2>
+          <p>Most people don't struggle because health information doesn't exist — they struggle because it's scattered, inconsistent, and hard to act on.</p>
+        </div>
+        <div class="problem-grid">
+          <div class="problem-card">
+            <span class="problem-num">01</span>
+            <h3>Confusing information</h3>
+            <p>Health content online is often contradictory, overly technical, or written for clinicians rather than patients.</p>
+          </div>
+          <div class="problem-card">
+            <span class="problem-num">02</span>
+            <h3>Uncertainty about care</h3>
+            <p>People often don't know whether a concern needs urgent attention, a specialist, or simply time and rest.</p>
+          </div>
+          <div class="problem-card">
+            <span class="problem-num">03</span>
+            <h3>Unreliable resources</h3>
+            <p>Search results mix credible medical sources with unverified claims, making it hard to know what to trust.</p>
+          </div>
+          <div class="problem-card">
+            <span class="problem-num">04</span>
+            <h3>Fragmented discovery</h3>
+            <p>Finding the right doctor or pharmacy usually means jumping between apps, directories, and word of mouth.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SOLUTION ========== -->
+    <section id="solution" class="alt">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Our solution</span>
+          <h2>An assistance layer between a health question and the right next step.</h2>
+          <p>Pulse AI doesn't replace healthcare professionals — it helps people move from confusion to clarity, and from clarity to appropriate care.</p>
+        </div>
+        <div class="flow">
+          <div class="flow-step"><div class="flow-node">A</div><h3>Ask</h3><p>Describe a health question or concern in plain language.</p></div>
+          <div class="flow-step"><div class="flow-node">U</div><h3>Understand</h3><p>Pulse AI breaks the topic down into clear, accessible information.</p></div>
+          <div class="flow-step"><div class="flow-node">G</div><h3>Guidance</h3><p>Receive responsible, general guidance on possible next steps.</p></div>
+          <div class="flow-step"><div class="flow-node">C</div><h3>Care</h3><p>Get pointed toward the appropriate professional or service.</p></div>
+        </div>
+        <svg class="pulse-rule flow-line" viewBox="0 0 1180 22" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0,11 L295,11 L309,2 L323,20 L337,11 L590,11 L604,2 L618,20 L632,11 L885,11 L899,2 L913,20 L927,11 L1180,11"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ========== FEATURES ========== -->
+    <section id="features">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Features</span>
+          <h2>What Pulse AI does — today and next.</h2>
+          <p>A platform built in stages: what's available now, and what we're deliberately building toward.</p>
+        </div>
+        <div class="feat-grid">
+          <div class="feat-card">
+            <svg class="feat-icon" viewBox="0 0 42 42" aria-hidden="true"><circle cx="21" cy="21" r="19" stroke="#DC2F3D" stroke-width="1.5" fill="none"/><path d="M12 21H17L19 15L23 27L25 21H30" stroke="#DC2F3D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <h3>AI Health Assistant</h3>
+            <p>Ask health-related questions in natural language and get clear, structured, easy-to-understand responses.</p>
+          </div>
+          <div class="feat-card">
+            <svg class="feat-icon" viewBox="0 0 42 42" aria-hidden="true"><rect x="9" y="6" width="24" height="30" rx="3" stroke="#DC2F3D" stroke-width="1.5" fill="none"/><path d="M15 15H27M15 21H27M15 27H22" stroke="#DC2F3D" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <h3>Reliable Health Information</h3>
+            <p>Information sourced with care and presented responsibly, with clear framing around its limits.</p>
+          </div>
+          <div class="feat-card">
+            <span class="badge-future">In development</span>
+            <svg class="feat-icon" viewBox="0 0 42 42" aria-hidden="true"><circle cx="18" cy="16" r="7" stroke="#DC2F3D" stroke-width="1.5" fill="none"/><path d="M6 35C6 27 11 24 18 24C25 24 30 27 30 35" stroke="#DC2F3D" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M30 12L34 16L30 20" stroke="#DC2F3D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <h3>Doctor Discovery</h3>
+            <p>Find and connect with verified doctors relevant to a given health concern, in your area.</p>
+          </div>
+          <div class="feat-card">
+            <span class="badge-future">Planned</span>
+            <svg class="feat-icon" viewBox="0 0 42 42" aria-hidden="true"><rect x="11" y="9" width="20" height="24" rx="2" stroke="#DC2F3D" stroke-width="1.5" fill="none"/><path d="M17 16H25M17 22H25M17 28H21" stroke="#DC2F3D" stroke-width="1.7" stroke-linecap="round"/><circle cx="30" cy="30" r="6" fill="#FCFCFB" stroke="#DC2F3D" stroke-width="1.5"/><path d="M28 30H32M30 28V32" stroke="#DC2F3D" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <h3>Pharmacist-Backed Medicine Information</h3>
+            <p>General medicine information reviewed alongside pharmacist expertise — never a prescription.</p>
+          </div>
+          <div class="feat-card">
+            <span class="badge-future">Planned</span>
+            <svg class="feat-icon" viewBox="0 0 42 42" aria-hidden="true"><path d="M8 18L21 7L34 18" stroke="#DC2F3D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/><rect x="12" y="18" width="18" height="15" stroke="#DC2F3D" stroke-width="1.5" fill="none"/><path d="M18 33V25H24V33" stroke="#DC2F3D" stroke-width="1.5" fill="none"/></svg>
+            <h3>Pharmacy Connectivity</h3>
+            <p>Discover nearby pharmacy services and check general medicine availability.</p>
+          </div>
+          <div class="feat-card">
+            <svg class="feat-icon" viewBox="0 0 42 42" aria-hidden="true"><path d="M21 6C21 6 10 13 10 22C10 29.2 14.9 34 21 36C27.1 34 32 29.2 32 22C32 13 21 6 21 6Z" stroke="#DC2F3D" stroke-width="1.5" fill="none" stroke-linejoin="round"/><path d="M16 22H19L21 17L24 27L26 22H28" stroke="#DC2F3D" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <h3>Personalized Care Navigation</h3>
+            <p>Guidance shaped around your questions, helping you decide what kind of care to seek next.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== HOW IT WORKS ========== -->
+    <section id="how" class="alt">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">How it works</span>
+          <h2>From question to appropriate care, in four steps.</h2>
+        </div>
+        <div class="steps">
+          <div class="step"><span class="step-num">01</span><h3>Ask your question</h3><p>Start with any health-related question, in your own words.</p></div>
+          <div class="step"><span class="step-num">02</span><h3>Understand the information</h3><p>Pulse AI translates it into clear, accessible explanation.</p></div>
+          <div class="step"><span class="step-num">03</span><h3>Receive responsible guidance</h3><p>Get general, well-scoped guidance — never a diagnosis.</p></div>
+          <div class="step"><span class="step-num">04</span><h3>Take the next step</h3><p>Move toward the right professional, service, or resource.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== WHY PULSE AI ========== -->
+    <section>
+      <div class="wrap">
+        <div class="why-grid">
+          <div>
+            <span class="eyebrow">Why Pulse AI</span>
+            <h2 style="font-size:clamp(26px,3.2vw,34px); margin-top:14px;">Built to be trusted, not just used.</h2>
+            <div class="why-list">
+              <div class="why-item">
+                <div class="why-mark"><span></span></div>
+                <div><h3>Accessible by design</h3><p>Plain language, no jargon — health information should be usable by anyone.</p></div>
+              </div>
+              <div class="why-item">
+                <div class="why-mark"><span></span></div>
+                <div><h3>Responsible AI</h3><p>Clear boundaries on what Pulse AI can and cannot do — always.</p></div>
+              </div>
+              <div class="why-item">
+                <div class="why-mark"><span></span></div>
+                <div><h3>Verified information, over time</h3><p>A roadmap toward content and partners reviewed by qualified professionals.</p></div>
+              </div>
+              <div class="why-item">
+                <div class="why-mark"><span></span></div>
+                <div><h3>Human expertise alongside AI</h3><p>Doctors and pharmacists are the destination, not something we replace.</p></div>
+              </div>
+              <div class="why-item">
+                <div class="why-mark"><span></span></div>
+                <div><h3>Simpler navigation</h3><p>One place to start, instead of ten disconnected ones.</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="why-visual">
+            <svg class="pulse-graph" viewBox="0 0 400 120" aria-hidden="true">
+              <path class="pg-path" d="M0,60 L110,60 L128,20 L146,100 L164,60 L230,60 L246,40 L262,80 L278,60 L400,60"/>
+            </svg>
+            <span class="panel-tag">Signal over noise</span>
+            <p class="panel-caption" style="margin-top:14px;">Every response is scoped to inform and guide — never to diagnose or prescribe.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== VISION ========== -->
+    <section id="vision" class="alt">
+      <div class="wrap">
+        <div class="vision">
+          <div class="vision-inner">
+            <span class="eyebrow" style="color:#FF8A93;">Our vision</span>
+            <h2>Making healthcare easier to understand, access, and navigate.</h2>
+            <p>Long term, Pulse AI aims to bring together AI-powered guidance with doctors, pharmacists, healthcare providers, and pharmacy services — into one connected, trustworthy experience.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== ROADMAP ========== -->
+    <section id="roadmap">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Roadmap</span>
+          <h2>Where we are, and where we're headed.</h2>
+        </div>
+        <div class="roadmap">
+          <div class="road-card active">
+            <span class="road-tag">NOW</span>
+            <h3>AI healthcare assistance</h3>
+            <p>Core AI assistant for understanding health questions and receiving responsible guidance.</p>
+          </div>
+          <div class="road-card">
+            <span class="road-tag">NEXT</span>
+            <h3>Doctor &amp; pharmacist verification</h3>
+            <p>Building the verification layer to bring qualified professionals onto the platform.</p>
+          </div>
+          <div class="road-card">
+            <span class="road-tag">THEN</span>
+            <h3>Healthcare &amp; pharmacy integrations</h3>
+            <p>Connecting users to pharmacy services and healthcare provider systems.</p>
+          </div>
+          <div class="road-card">
+            <span class="road-tag">VISION</span>
+            <h3>A connected care ecosystem</h3>
+            <p>One trustworthy platform spanning AI guidance, professionals, and pharmacy services.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== TEAM ========== -->
+    <section id="team" class="alt">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Team</span>
+          <h2>Building Pulse AI.</h2>
+          <p>An early-stage founding team building Pulse AI end-to-end. Full team details to be added.</p>
+        </div>
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="team-avatar"><img src="assets/gopi-photo.jpeg" alt="Hrishikesh Gopiraj"></div>
+            <h3>Hrishikesh Gopiraj</h3>
+            <p class="role">Founder</p>
+            <p class="bio">Building Pulse Ai to make healthcare information easier to understand and act on .</p>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar"><img src="assets/loki-photo.jpeg" alt="Nomula Lokesh"></div>
+            <h3>Nomula lokesh</h3>
+            <p class="role">Co-Founder</p>
+            <p class="bio">Building Pulse Ai to make healthcare information easier to understand and act on .</p>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">PHOTO</div>
+            <h3>[Team member]</h3>
+            <p class="role">Role to be added</p>
+            <p class="bio">Bio to be added.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== FINAL CTA ========== -->
+    <section id="early-access" class="final-cta">
+      <div class="wrap">
+        <span class="eyebrow" style="justify-content:center;">Get involved</span>
+        <h2 style="margin-top:14px;">Healthcare shouldn't feel complicated.<br>Join us as we build Pulse AI.</h2>
+        <p>Be part of the early access group as we build a more understandable, navigable healthcare experience.</p>
+        <form id="earlyAccessForm" class="early-access-form" novalidate>
+          <input type="email" id="earlyAccessEmail" name="email" placeholder="you@email.com" required aria-label="Email address">
+          <button type="submit" class="btn btn-primary">Get Early Access</button>
+        </form>
+        <p id="earlyAccessStatus" class="form-status" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== DISCLAIMER ========== -->
+  <div class="disclaimer">
+    <div class="wrap">
+      <strong>Medical disclaimer:</strong> Pulse AI provides general health information and guidance. It is not a doctor, does not diagnose conditions or prescribe medication, and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider for medical concerns.
+    </div>
+  </div>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    <div class="wrap">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="#top" class="logo">
+            <svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true">
+              <circle cx="32" cy="32" r="30" fill="#DC2F3D"/>
+              <path d="M8 32H22L27 18L36 46L41 32H56" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Pulse AI
+          </a>
+          <p>Healthcare assistance, intelligently designed.</p>
+        </div>
+        <div class="footer-cols">
+          <div class="footer-col">
+            <h4>Product</h4>
+            <a href="#solution">Solution</a>
+            <a href="#features">Features</a>
+            <a href="#roadmap">Roadmap</a>
+          </div>
+          <div class="footer-col">
+            <h4>Company</h4>
+            <a href="#team">Team</a>
+            <a href="#vision">Vision</a>
+            <a href="#early-access">Early access</a>
+          </div>
+          <div class="footer-col">
+            <h4>Legal</h4>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Medical Disclaimer</a>
+            <a href="#">Contact</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Pulse AI. All rights reserved.</p>
+        <p>Pulse AI is an information &amp; navigation platform, not a medical provider.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========== AUTH MODAL ========== -->
+  <div id="authModal" class="auth-modal" aria-hidden="true">
+    <div class="auth-modal-backdrop" id="authBackdrop"></div>
+    <div class="auth-modal-panel">
+      <button class="auth-close" id="authClose" aria-label="Close">&times;</button>
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Log In</button>
+        <button class="auth-tab" data-tab="register">Sign Up</button>
+      </div>
+      <form id="loginForm" class="auth-form">
+        <input type="email" id="loginEmail" placeholder="Email" required autocomplete="email">
+        <input type="password" id="loginPassword" placeholder="Password" required autocomplete="current-password">
+        <button type="submit" class="btn btn-primary auth-submit">Log In</button>
+        <p id="loginError" class="auth-error"></p>
+      </form>
+      <form id="registerForm" class="auth-form" style="display:none;">
+        <input type="text" id="registerName" placeholder="Full name" autocomplete="name">
+        <input type="email" id="registerEmail" placeholder="Email" required autocomplete="email">
+        <input type="password" id="registerPassword" placeholder="Password (min 6 characters)" required minlength="6" autocomplete="new-password">
+        <button type="submit" class="btn btn-primary auth-submit">Create Account</button>
+        <p id="registerError" class="auth-error"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========== CHAT WIDGET ========== -->
+  <div id="chatWidget" class="chat-widget">
+    <button id="chatToggle" class="chat-toggle" aria-label="Open Pulse AI assistant">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </button>
+    <div id="chatPanel" class="chat-panel" aria-hidden="true">
+      <div class="chat-header">
+        <div class="chat-header-info">
+          <svg class="chat-header-icon" viewBox="0 0 64 64" width="28" height="28"><circle cx="32" cy="32" r="30" fill="#DC2F3D"/><path d="M8 32H22L27 18L36 46L41 32H56" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div>
+            <strong>Pulse AI</strong>
+            <span class="chat-header-status">Healthcare assistant</span>
+          </div>
+        </div>
+        <button id="chatClose" class="chat-close" aria-label="Close chat">&times;</button>
+      </div>
+      <div id="chatMessages" class="chat-messages">
+        <div class="chat-msg assistant">
+          <div class="chat-msg-bubble">Hi! I'm Pulse AI. I can help you understand health information and guide you toward the right care. What would you like to know?</div>
+        </div>
+      </div>
+      <form id="chatForm" class="chat-input-area" autocomplete="off">
+        <input type="text" id="chatInput" placeholder="Ask a health question..." maxlength="2000" aria-label="Type your health question">
+        <button type="submit" id="chatSend" class="chat-send" aria-label="Send message">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </form>
+      <div class="chat-disclaimer">For informational purposes only — not medical advice.</div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
