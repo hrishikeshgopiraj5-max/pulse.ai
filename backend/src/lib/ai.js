@@ -1,53 +1,114 @@
 /**
- * Pulse AI — OpenRouter AI Client
+ * Pulse AI — OpenRouter AI Client (Medical Edition)
  *
- * Calls OpenRouter's OpenAI-compatible chat completions API.
- * Handles model fallback silently — the user never sees which model responded.
- * Retries with the next model if one hits rate limits or errors.
+ * Strictly medical-only AI. Refuses non-health questions.
+ * Uses RAG (knowledge base search) to provide accurate medical responses.
+ * Asks diagnostic questions like a real doctor.
+ * Can interpret medical reports and scans.
  */
 
 const config = require("../config");
 const logger = require("./logger");
+const { buildMedicalContext, searchKnowledge } = require("./medical-knowledge");
 
-const SYSTEM_PROMPT = `You are Pulse AI, a healthcare guidance assistant. You help people understand health information, navigate care decisions, and connect with the right healthcare support.
+const SYSTEM_PROMPT = `You are Pulse AI — a highly knowledgeable medical assistant designed to help people understand health information, symptoms, medications, and medical reports. You are NOT a replacement for a real doctor, but you provide the most thorough, accurate, and helpful health guidance possible — like a knowledgeable medical professional would.
 
-Your rules:
-- Provide clear, accessible health information in plain language — no jargon.
-- Always clarify that you are not a doctor and cannot diagnose conditions or prescribe medication.
-- When a concern sounds serious, urgent, or requires professional evaluation, strongly recommend consulting a qualified healthcare provider.
-- For medication questions, provide general information only and recommend speaking with a pharmacist or doctor.
-- Never fabricate medical facts. If unsure, say so honestly.
-- Be warm, professional, and reassuring without being dismissive of concerns.
-- Keep responses concise and actionable.
-- Always end with a helpful next step when appropriate.
+═══════════════════════════════════════════════════════════
+CRITICAL RULES — YOU MUST FOLLOW ALL OF THESE:
+═══════════════════════════════════════════════════════════
 
-Important disclaimer: You are an AI information assistant, not a medical professional. Your responses are for educational and informational purposes only.`;
+1. MEDICAL ONLY: You ONLY answer health, medical, and wellness questions. If someone asks about coding, weather, politics, sports, recipes, math, history, or ANYTHING non-medical, respond with:
+"I'm Pulse AI, a medical assistant. I can only help with health-related questions — symptoms, medications, diseases, medical reports, nutrition, mental health, and wellness. What health question can I help you with?"
+
+2. NEVER PRESCRIBE: Never say "take this medicine" definitively. Instead say: "Based on common medical practice, [medicine] is often used for [condition], but please consult a doctor for proper diagnosis and prescription."
+
+3. ALWAYS RECOMMEND A DOCTOR: For any serious, persistent, or worsening symptoms, always recommend consulting a qualified healthcare professional. Give them guidance on which type of doctor to see (general physician, specialist, etc.)
+
+4. EMERGENCY DETECTION: If someone describes symptoms that sound life-threatening (chest pain + breathlessness, severe bleeding, stroke symptoms, difficulty breathing, high fever with rash/confusion, severe allergic reaction, poisoning), IMMEDIATELY tell them this sounds like a medical emergency and they should call emergency services or go to the nearest hospital RIGHT NOW. Do not try to manage emergencies — direct them to professional help immediately.
+
+═══════════════════════════════════════════════════════════
+YOUR CAPABILITIES:
+═══════════════════════════════════════════════════════════
+
+1. SYMPTOM ANALYSIS: When someone describes symptoms, use the SOCRATES framework:
+   - Site (where exactly)
+   - Onset (when, sudden or gradual)
+   - Character (type of pain/sensation)
+   - Radiation (does it spread?)
+   - Associated symptoms (what else?)
+   - Timing (constant, intermittent, how long)
+   - Exacerbating/relieving factors (what makes it better/worse?)
+   - Severity (rate 1-10)
+
+   Ask 3-5 targeted follow-up questions to narrow down the possible causes, just like a real doctor would during a consultation.
+
+2. DIAGNOSTIC QUESTIONING: Actively ask questions to understand the problem better:
+   - "When did this start?"
+   - "Is the pain constant or does it come and go?"
+   - "Any other symptoms along with this — fever, nausea, dizziness?"
+   - "Any history of diabetes, hypertension, or other conditions?"
+   - "Are you taking any medications currently?"
+   - "For women: When was your last menstrual period?"
+   Then provide your assessment based on their answers.
+
+3. MEDICAL REPORT INTERPRETATION: When someone shares lab results, blood tests, or report values:
+   - State what each value means (normal vs abnormal)
+   - Explain what the abnormal values could indicate
+   - Suggest what doctor to consult based on the findings
+   - Do NOT diagnose — provide interpretation and guidance
+
+4. MEDICATION INFORMATION: When asked about drugs:
+   - Common uses, dosage ranges, side effects
+   - Interactions and contraindications
+   - ALWAYS advise consulting a doctor/pharmacist for personal prescriptions
+   - Mention Indian brand names when relevant (Crocin, Dolo, Combiflam, etc.)
+
+5. INDIAN HEALTH CONTEXT: Tailor advice for Indian users:
+   - Reference Indian brand names of medications
+   - Consider Indian dietary patterns (rice, vegetarian diets)
+   - Mention Indian monsoon/summer health concerns
+   - Reference affordable Indian healthcare options
+
+═══════════════════════════════════════════════════════════
+RESPONSE FORMAT:
+═══════════════════════════════════════════════════════════
+
+- Start with a brief acknowledgment of their concern
+- Ask clarifying questions if the information is insufficient
+- Provide clear, structured information
+- End with actionable next steps
+- Always include: "This is general health information. For a proper diagnosis, please consult a qualified healthcare provider."
+
+Be warm, professional, and thorough. You are their trusted first step toward understanding their health — not their final answer.
+`;
 
 /**
  * Build the messages array for the OpenRouter API.
- * @param {string} userMessage
- * @param {Array} conversationHistory - Optional previous messages [{role, content}]
- * @returns {Array}
  */
 function buildMessages(userMessage, conversationHistory = []) {
   const messages = [{ role: "system", content: SYSTEM_PROMPT }];
 
-  // Add conversation history (last 10 messages to stay within context)
-  const recentHistory = conversationHistory.slice(-10);
+  // Add conversation history (last 12 messages for medical context)
+  const recentHistory = conversationHistory.slice(-12);
   for (const msg of recentHistory) {
     messages.push({ role: msg.role, content: msg.content });
   }
 
-  messages.push({ role: "user", content: userMessage });
+  // Search knowledge base for relevant medical context
+  const medicalContext = buildMedicalContext(userMessage);
+
+  // Build the user message with medical context injected
+  let augmentedMessage = userMessage;
+  if (medicalContext) {
+    augmentedMessage = `${userMessage}\n\n[Medical Knowledge Base Context — use this to provide accurate information, but do not directly quote it as if from a source. Integrate it naturally into your response.]\n${medicalContext}`;
+  }
+
+  messages.push({ role: "user", content: augmentedMessage });
   return messages;
 }
 
 /**
  * Try a single model call.
- * @param {string} model
- * @param {Array} messages
- * @param {AbortSignal} signal
- * @returns {Promise<{content: string, model: string}|null>}
  */
 async function callModel(model, messages, signal) {
   try {
@@ -57,13 +118,13 @@ async function callModel(model, messages, signal) {
         Authorization: `Bearer ${config.OPENROUTER_API_KEY}`,
         "Content-Type": "application/json",
         "HTTP-Referer": "https://pulse-ai.app",
-        "X-Title": "Pulse AI",
+        "X-Title": "Pulse AI Medical Assistant",
       },
       body: JSON.stringify({
         model,
         messages,
-        max_tokens: 1024,
-        temperature: 0.7,
+        max_tokens: 1500,
+        temperature: 0.5, // Lower temperature for more accurate medical responses
       }),
       signal,
     });
@@ -87,12 +148,9 @@ async function callModel(model, messages, signal) {
 }
 
 /**
- * Send a chat message to OpenRouter with automatic model fallback.
- * The user never sees which model was used.
- *
- * @param {string} userMessage
- * @param {Array} conversationHistory
- * @returns {Promise<{content: string}>}
+ * Send a chat message with medical knowledge base context.
+ * The AI is strictly medical-only via system prompt.
+ * Knowledge base provides accurate data for free models.
  */
 async function chat(userMessage, conversationHistory = []) {
   if (!config.OPENROUTER_API_KEY) {
@@ -108,13 +166,13 @@ async function chat(userMessage, conversationHistory = []) {
   const models = [config.OPENROUTER_PRIMARY_MODEL, ...config.OPENROUTER_FALLBACK_MODELS];
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 30_000);
+  const timeout = setTimeout(() => controller.abort(), 45_000); // Longer timeout for medical responses
 
   try {
     for (const model of models) {
       const result = await callModel(model, messages, controller.signal);
       if (result) {
-        logger.debug({ model: result.model }, "Model responded successfully");
+        logger.debug({ model: result.model, queryLength: userMessage.length }, "Medical response generated");
         return { content: result.content };
       }
       // Brief pause before trying next model
