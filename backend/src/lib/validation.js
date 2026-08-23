@@ -57,10 +57,33 @@ const schemas = {
   earlyAccess: {
     fields: ["email"],
     validate(body) {
+      const errors = [];
+
       if (!body.email || !EMAIL_RE.test(body.email)) {
-        return "A valid email address is required.";
+        errors.push("A valid email address is required.");
       }
-      return null;
+
+      // firebase_uid is optional but if provided, must be a string
+      if (body.firebase_uid !== undefined && typeof body.firebase_uid !== "string") {
+        errors.push("firebase_uid must be a string.");
+      }
+
+      // name is optional but if provided, must be a string and reasonable length
+      if (body.name !== undefined && body.name !== null) {
+        if (typeof body.name !== "string") {
+          errors.push("Name must be a string.");
+        } else if (body.name.length > 255) {
+          errors.push("Name must be 255 characters or fewer.");
+        }
+      }
+
+      // source is optional but if provided, must be a known value
+      const validSources = ["website", "app", "referral", "other"];
+      if (body.source && !validSources.includes(body.source)) {
+        errors.push(`Source must be one of: ${validSources.join(", ")}`);
+      }
+
+      return errors.length > 0 ? errors.join(" ") : null;
     },
   },
 

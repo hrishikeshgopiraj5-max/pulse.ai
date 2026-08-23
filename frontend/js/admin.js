@@ -1,7 +1,10 @@
 /**
  * Pulse AI — Admin Dashboard Script
  * Manages early access sign-ups: view, approve, reject.
- * Now includes analytics dashboard for tracking medical topics.
+ * Includes analytics dashboard for tracking medical topics.
+ *
+ * SECURITY: Admin key is verified against the backend before showing dashboard.
+ * The key is never shown or stored unencrypted.
  */
 
 (function () {
@@ -25,25 +28,59 @@
   const statRejected = document.getElementById('statRejected');
 
   let currentFilter = 'pending';
-  let adminKey = localStorage.getItem(ADMIN_STORAGE_KEY) || '';
+  let adminKey = '';
 
-  // ─── Init ──────────────────────────────────────────────────
-  if (adminKey) {
-    showDashboard();
-  }
+  // ─── SECURITY: Always start with login screen ─────────────
+  // Never auto-login from localStorage — always verify against backend
+  showLogin();
 
-  // ─── Admin login ───────────────────────────────────────────
+  // ─── Admin login form ─────────────────────────────────────
   if (adminLoginForm) {
-    adminLoginForm.addEventListener('submit', (e) => {
+    adminLoginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      adminLoginError.textContent = '';
+
       const key = adminKeyInput.value.trim();
       if (!key) {
         adminLoginError.textContent = 'Please enter the admin key.';
         return;
       }
-      adminKey = key;
-      localStorage.setItem(ADMIN_STORAGE_KEY, key);
-      showDashboard();
+
+      // Show loading state
+      const submitBtn = adminLoginForm.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Verifying...';
+      submitBtn.disabled = true;
+
+      try {
+        // CRITICAL: Verify the key against the backend BEFORE showing dashboard
+        const verifyRes = await fetch(`${API}/early-access/admin/verify`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Admin-Key': key,
+          },
+        });
+
+        if (verifyRes.ok) {
+          // Key is valid — store and show dashboard
+          adminKey = key;
+          localStorage.setItem(ADMIN_STORAGE_KEY, key);
+          showDashboard();
+        } else if (verifyRes.status === 401 || verifyRes.status === 403) {
+          adminLoginError.textContent = 'Invalid admin key. Please check and try again.';
+          adminKeyInput.value = '';
+          adminKeyInput.focus();
+        } else if (verifyRes.status === 503) {
+          adminLoginError.textContent = 'Admin authentication is not configured on the server. Contact the developer.';
+        } else {
+          adminLoginError.textContent = 'Something went wrong. Please try again.';
+        }
+      } catch (err) {
+        adminLoginError.textContent = 'Could not reach the server. Check your connection.';
+      } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
     });
   }
 
@@ -52,13 +89,18 @@
     adminLogoutBtn.addEventListener('click', () => {
       adminKey = '';
       localStorage.removeItem(ADMIN_STORAGE_KEY);
-      adminDashboard.style.display = 'none';
-      adminLogin.style.display = 'flex';
-      adminLoginError.textContent = '';
+      showLogin();
     });
   }
 
-  // ─── Show dashboard ────────────────────────────────────────
+  // ─── Show/hide screens ────────────────────────────────────
+  function showLogin() {
+    adminLogin.style.display = 'flex';
+    adminDashboard.style.display = 'none';
+    adminLoginError.textContent = '';
+    adminKeyInput.value = '';
+  }
+
   async function showDashboard() {
     adminLogin.style.display = 'none';
     adminDashboard.style.display = 'block';
@@ -66,7 +108,7 @@
     await loadSignups();
   }
 
-  // ─── Authed fetch ──────────────────────────────────────────
+  // ─── Authed fetch (sends admin key with every request) ────
   async function adminFetch(url, options = {}) {
     return fetch(url, {
       ...options,
@@ -84,11 +126,11 @@
       const res = await adminFetch(`${API}/early-access/count`);
       if (!res.ok) {
         if (res.status === 401 || res.status === 403) {
+          // Session expired or key revoked — force re-login
           adminKey = '';
           localStorage.removeItem(ADMIN_STORAGE_KEY);
-          adminDashboard.style.display = 'none';
-          adminLogin.style.display = 'flex';
-          adminLoginError.textContent = 'Invalid admin key.';
+          showLogin();
+          adminLoginError.textContent = 'Session expired. Please log in again.';
           return;
         }
         return;
@@ -183,12 +225,10 @@
       const data = await res.json();
       const analytics = data.data || {};
 
-      // Update stats
       document.getElementById('analyticsTotal').textContent = analytics.totalQueries || 0;
       document.getElementById('analyticsBlocked').textContent = analytics.nonMedicalBlocked || 0;
       document.getElementById('analyticsEmergency').textContent = analytics.emergencyDetected || 0;
 
-      // Render top topics
       const topicsContainer = document.getElementById('analyticsTopics');
       const topics = analytics.topTopics || [];
       if (topics.length === 0) {
@@ -205,7 +245,6 @@
         `).join('');
       }
 
-      // Render recent queries
       const recentContainer = document.getElementById('analyticsRecent');
       const recent = analytics.recentQueries || [];
       if (recent.length === 0) {

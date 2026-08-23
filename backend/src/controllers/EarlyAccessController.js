@@ -108,6 +108,14 @@ const EarlyAccessController = {
       next(err);
     }
   },
+
+  /**
+   * GET /api/v1/early-access/admin/verify (admin)
+   * Verifies admin key is valid. Returns 200 if valid.
+   */
+  verifyAdmin(req, res) {
+    res.json({ verified: true, message: "Admin key is valid." });
+  },
 };
 
 module.exports = EarlyAccessController;
