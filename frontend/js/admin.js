@@ -1,6 +1,7 @@
 /**
  * Pulse AI — Admin Dashboard Script
  * Manages early access sign-ups: view, approve, reject.
+ * Now includes analytics dashboard for tracking medical topics.
  */
 
 (function () {
@@ -16,6 +17,8 @@
   const adminLoginError = document.getElementById('adminLoginError');
   const adminLogoutBtn = document.getElementById('adminLogoutBtn');
   const adminTableBody = document.getElementById('adminTableBody');
+  const adminTableWrap = document.getElementById('adminTableWrap');
+  const analyticsPanel = document.getElementById('analyticsPanel');
   const statTotal = document.getElementById('statTotal');
   const statPending = document.getElementById('statPending');
   const statApproved = document.getElementById('statApproved');
@@ -171,13 +174,73 @@
     }
   }
 
+  // ─── Load analytics ────────────────────────────────────────
+  async function loadAnalytics() {
+    try {
+      const res = await adminFetch(`${API}/early-access/analytics`);
+      if (!res.ok) return;
+
+      const data = await res.json();
+      const analytics = data.data || {};
+
+      // Update stats
+      document.getElementById('analyticsTotal').textContent = analytics.totalQueries || 0;
+      document.getElementById('analyticsBlocked').textContent = analytics.nonMedicalBlocked || 0;
+      document.getElementById('analyticsEmergency').textContent = analytics.emergencyDetected || 0;
+
+      // Render top topics
+      const topicsContainer = document.getElementById('analyticsTopics');
+      const topics = analytics.topTopics || [];
+      if (topics.length === 0) {
+        topicsContainer.innerHTML = '<p class="table-empty">No data yet. Queries will appear as users chat.</p>';
+      } else {
+        topicsContainer.innerHTML = topics.map((t) => `
+          <div class="topic-bar">
+            <span class="topic-name">${escapeHtml(t.topic)}</span>
+            <div class="topic-bar-bg">
+              <div class="topic-bar-fill" style="width: ${Math.min(100, (t.count / topics[0].count) * 100)}%"></div>
+            </div>
+            <span class="topic-count">${t.count}</span>
+          </div>
+        `).join('');
+      }
+
+      // Render recent queries
+      const recentContainer = document.getElementById('analyticsRecent');
+      const recent = analytics.recentQueries || [];
+      if (recent.length === 0) {
+        recentContainer.innerHTML = '<p class="table-empty">No recent queries.</p>';
+      } else {
+        recentContainer.innerHTML = recent.map((q) => `
+          <div class="recent-query">
+            <span class="recent-msg">${escapeHtml(q.message)}</span>
+            <span class="recent-topics">${q.topics.slice(0, 3).map((t) => `<span class="topic-tag">${escapeHtml(t)}</span>`).join('')}</span>
+            ${q.emergency ? '<span class="emergency-badge">EMERGENCY</span>' : ''}
+            <span class="recent-time">${formatDate(q.timestamp)}</span>
+          </div>
+        `).join('');
+      }
+    } catch (err) {
+      console.error('Failed to load analytics:', err);
+    }
+  }
+
   // ─── Tab filters ───────────────────────────────────────────
   document.querySelectorAll('.admin-tab').forEach((tab) => {
     tab.addEventListener('click', async () => {
       document.querySelectorAll('.admin-tab').forEach((t) => t.classList.remove('active'));
       tab.classList.add('active');
       currentFilter = tab.dataset.filter;
-      await loadSignups();
+
+      if (currentFilter === 'analytics') {
+        adminTableWrap.style.display = 'none';
+        analyticsPanel.style.display = 'block';
+        await loadAnalytics();
+      } else {
+        adminTableWrap.style.display = 'block';
+        analyticsPanel.style.display = 'none';
+        await loadSignups();
+      }
     });
   });
 

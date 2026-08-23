@@ -5,6 +5,7 @@
  */
 
 const EarlyAccessService = require("../services/EarlyAccessService");
+const AIService = require("../services/AIService");
 const { success } = require("../lib/response");
 const logger = require("../lib/logger");
 
@@ -90,6 +91,19 @@ const EarlyAccessController = {
       const result = await EarlyAccessService.reject(req.params.id, req.body.admin_note);
       logger.info({ id: req.params.id }, "Early access rejected");
       res.json(success("User rejected.", result));
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  /**
+   * GET /api/v1/early-access/analytics (admin)
+   * Returns chat analytics: topic popularity, query counts, model usage
+   */
+  analytics(req, res, next) {
+    try {
+      const data = AIService.getAnalytics();
+      res.json(success("Analytics retrieved.", data));
     } catch (err) {
       next(err);
     }

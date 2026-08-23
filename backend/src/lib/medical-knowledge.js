@@ -137,8 +137,150 @@ PCOS (Polycystic Ovary Syndrome — common in Indian women):
 - Symptoms: Irregular periods, excess hair growth (hirsutism), acne, weight gain, difficulty conceiving
 - Diagnosis: Ultrasound (polycystic ovaries), elevated testosterone, irregular cycles
 - Treatment: Lifestyle (weight loss even 5-10% helps), Metformin, oral contraceptive pills for regulation, Inositol supplements
+
+KIDNEY STONES (Nephrolithiasis):
+- Symptoms: Severe flank pain (loin to groin), colicky pain, blood in urine (hematuria), nausea/vomiting, frequent/painful urination
+- Diagnosis: CT KUB (most accurate), Ultrasound abdomen, Urine routine (RBCs), Serum calcium/uric acid
+- Types: Calcium oxalate (most common 80%), Uric acid, Struvite, Cystine
+- Treatment: Small stones (<5mm): Hydrate (3L/day), pain management (Diclofenac/Paracetamol), alpha blockers (Tamsulosin) to help pass. Large stones (>10mm): ESWL (lithotripsy), Ureteroscopy, PCNL
+- Prevention: Drink plenty of water, reduce salt, limit oxalate-rich foods (spinach, nuts, chocolate), avoid excess calcium supplements
+
+ARTHRITIS — OSTEOARTHRITIS (OA):
+- Symptoms: Joint pain (weight-bearing joints: knee, hip), stiffness <30 min after rest, crepitus (grinding sound), reduced range of motion, swelling
+- Diagnosis: Clinical + X-ray (joint space narrowing, osteophytes, subchondral sclerosis)
+- Treatment: Weight loss, physiotherapy, Paracetamol (first line) → NSAIDs (Diclofenac) → Intra-articular steroid injection → Joint replacement (severe)
+- Indian context: Common in elderly, worse with squatting/floor sitting
+
+ARTHRITIS — RHEUMATOID ARTHRITIS (RA):
+- Symptoms: Symmetrical joint swelling (hands, wrists, feet), morning stiffness >30 min, fatigue, joint deformity over time
+- Diagnosis: Rheumatoid Factor (RF), Anti-CCP antibodies, ESR/CRP elevated, X-ray (erosions)
+- Treatment: DMARDs (Methotrexate 15mg/week + Folic acid), biologics (Adalimumab), steroids short-term
+- Refer to Rheumatologist
+
+ALLERGIC RHINITIS (Hay Fever):
+- Symptoms: Sneezing, runny nose (clear discharge), nasal congestion, itchy eyes/nose/palate, watery eyes
+- Diagnosis: Clinical. Skin prick test or specific IgE for allergen identification
+- Treatment: Antihistamines (Cetirizine 10mg, Levocetirizine 5mg), nasal steroid sprays (Fluticasone, Mometasone), avoid allergens, nasal saline wash
+
+URTICARIA (Hives):
+- Symptoms: Raised, itchy welts on skin, can be small or large, come and go, angioedema (swelling of lips/eyelids)
+- Diagnosis: Clinical. Usually no tests needed unless chronic (>6 weeks) → check thyroid, autoimmunity
+- Treatment: Antihistamines (Cetirizine 10mg — may need 2-4x/day), avoid triggers (heat, tight clothes, NSAIDs, certain foods). Chronic: Montelukast, Omalizumab
+
+ECZEMA (Atopic Dermatitis):
+- Symptoms: Itchy, dry, red, cracked skin. Common in folds (elbow, behind knee, neck). Worse in winter/dry weather
+- Diagnosis: Clinical. Personal/family history of allergies/asthma
+- Treatment: Moisturize daily (Emollient creams), mild steroid cream (Hydrocortisone 1%) for flares, avoid soap (use syndet bars), cotton clothes, antihistamines for itching
+
+PSORIASIS:
+- Symptoms: Thick, red, scaly patches (silver-white scales). Common: scalp, elbows, knees, lower back. Itchy, can bleed when scratched
+- Diagnosis: Clinical. Auspitz sign (pinpoint bleeding when scale removed)
+- Treatment: Moisturizers, topical steroids (Betamethasone), Vitamin D analogues (Calcipotriol), Coal tar shampoos (for scalp). Severe: Methotrexate, Phototherapy, Biologics
+
+ACNE (Common in Indian teenagers):
+- Symptoms: Whiteheads, blackheads, papules, pustules, nodules. Face, chest, back
+- Diagnosis: Clinical grading (mild/moderate/severe)
+- Treatment: Mild: Benzoyl peroxide 2.5-5% + topical Retinoid (Adapalene 0.1%). Moderate: Add oral Doxycycline/Minocycline. Severe: Isotretinoin (dermatologist only). Daily face wash with Salicylic acid cleanser. Do NOT pick/squeeze
+
+FUNGAL INFECTIONS (Very common in India — monsoon/humidity):
+- Symptoms: Itching, red scaly patches, ring-shaped lesions (tinea corporis), white patches in groin (tinea cruris), foot itching (tinea pedis/athlete's foot)
+- Diagnosis: Clinical, KOH mount (skin scraping under microscope)
+- Treatment: Topical antifungals (Clotrimazole cream, Terbinafine cream) x 2-4 weeks. Oral antifungals (Fluconazole/Griseofulvin) for extensive/severe. Keep area dry, cotton underwear, avoid sharing towels
+
+SKIN INFECTIONS (Bacterial):
+- Impetigo: Honey-colored crusts, common in children. Treatment: Mupirocin cream or oral Flucloxacillin
+- Cellulitis: Red, hot, swollen, painful skin. Treatment: Oral Flucloxacillin/Cephalexin. If severe → IV antibiotics
+- Boils/Carbuncles: Deep painful lumps with pus. Treatment: Warm compress, drainage if large, oral antibiotics
+
+EYE PROBLEMS — CONJUNCTIVITIS (Pink Eye):
+- Symptoms: Red eye, watering, discharge (clear viral, yellow-green bacterial), crusting of eyelids, itching
+- Diagnosis: Clinical. Slit lamp exam if persistent
+- Treatment: Viral: Self-limiting (7-10 days), artificial tears. Bacterial: Antibiotic drops (Moxifloxacin, Tobramycin). Allergic: Antihistamine drops (Olopatadine). Hygiene: Wash hands, don't share towels/pillows
+
+EYE PROBLEMS — DRY EYE:
+- Symptoms: Gritty/sandy feeling, burning, redness, blurred vision (improves with blinking), worse after screen use
+- Diagnosis: Schirmer test, Tear break-up time (TBUT)
+- Treatment: Preservative-free artificial tears (Carmellose, Hypromellose), 20-20-20 rule (every 20 min look 20 feet away for 20 sec), humidifier, omega-3 supplements, reduce AC exposure
+
+EYE PROBLEMS — COMPUTER VISION SYNDROME:
+- Symptoms: Eye strain, headache, blurred vision, dry eyes, neck/shoulder pain after prolonged screen use
+- Treatment: 20-20-20 rule, proper screen distance (arm's length), screen brightness matching room, blinking exercises, anti-glare screen, proper sitting posture
+
+EYE PROBLEMS — STYE (Hordeolum):
+- Symptoms: Painful red lump on eyelid edge, swollen, tender
+- Treatment: Warm compress 10-15 min 3-4x/day (helps drain), do NOT squeeze. Usually resolves in 7-10 days. If persists >2 weeks or vision affected → ophthalmologist
+
+ENT — EAR INFECTION (Acute Otitis Media):
+- Symptoms: Ear pain (otalgia), fever, reduced hearing, sometimes discharge
+- Diagnosis: Otoscopy (red/bulging eardrum)
+- Treatment: Pain relief (Paracetamol/Ibuprofen), antibiotic drops (Ciprofloxacin + Dexamethasone). Severe: Oral antibiotics (Amoxicillin)
+
+ENT — SINUSITIS:
+- Symptoms: Facial pain/pressure (forehead, cheeks, around eyes), nasal congestion, thick yellow-green discharge, post-nasal drip, reduced smell
+- Diagnosis: Clinical. CT sinuses if chronic. X-ray ( Waters view)
+- Treatment: Acute (<2 weeks): Nasal saline wash, nasal steroid spray (Mometasone), decongestant (Xylometazoline 0.1% — max 5 days), antibiotics if bacterial (Amoxicillin-Clavulanate). Chronic (>12 weeks): ENT referral, possible FESS surgery
+
+ENT — TONSILLITIS:
+- Symptoms: Sore throat, difficulty swallowing, fever, enlarged tonsils (white/yellow spots), neck lymph node swelling
+- Diagnosis: Clinical, Throat swab (for Strep throat — Rapid ASO test)
+- Treatment: Viral: Supportive (warm saline gargles, paracetamol, fluids). Bacterial (Strep): Antibiotics (Amoxicillin 5-day course or Azithromycin 3-day). Recurrent: Tonsillectomy (ENT surgeon)
+
+ENT — TINNITUS (Ringing in ears):
+- Symptoms: Ringing, buzzing, hissing sound in ears without external source. Can be constant or intermittent
+- Diagnosis: Clinical, Audiometry, Tympanometry
+- Treatment: Identify cause (earwax, infection, noise exposure, medication). Sound therapy, hearing aids if hearing loss, avoid silence/quiet rooms
+
+GASTRO — IRRITABLE BOWEL SYNDROME (IBS):
+- Symptoms: Abdominal cramping, bloating, diarrhea and/or constipation (alternating), mucus in stool, relief after bowel movement
+- Diagnosis: Clinical (Rome IV criteria). No alarm features (bleeding, weight loss, anemia)
+- Treatment: Dietary (FODMAP diet, increase fiber gradually), stress management, antispasmodics (Mebeverine, Dicyclomine), probiotics, Loperamide for diarrhea-predominant
+
+GASTRO — PEPTIC ULCER DISEASE:
+- Symptoms: Burning epigastric pain, worse on empty stomach/night, relieved by antacids, bloating, nausea
+- Diagnosis: Upper GI endoscopy (gold standard), H. pylori test (urea breath test/stool antigen)
+- Treatment: Proton pump inhibitors (Pantoprazole 40mg x 8 weeks), H. pylori triple therapy (if positive: PPI + Amoxicillin + Clarithromycin x 14 days)
+
+GASTRO — DIARRHEA (Acute):
+- Symptoms: Loose/watery stools >3x/day, cramps, urgency, sometimes fever/blood
+- Diagnosis: Stool routine, stool culture if persistent
+- Treatment: ORS (most important), zinc supplementation (children: 20mg/day x 10-14 days), probiotics, Loperamide (adults only, NOT children), BRAT diet (bananas, rice, apples, toast). Avoid dairy. If bloody diarrhea or >3 days → doctor
+
+HEMORRHOIDS (Piles):
+- Symptoms: Painless bleeding during/after bowel movement (bright red blood), prolapse (lump coming out), itching, pain if thrombosed
+- Diagnosis: Per-rectal examination, Proctoscopy, Colonoscopy if >40 or alarm symptoms
+- Treatment: High-fiber diet, stool softeners (Isabgol/psyllium husk), Sitz baths, topical ointment (Lidocaine + Hydrocortisone suppositories). Grade III-IV: Surgery (MIPH/Laser)
+
+HERNIA (Inguinal/Groin):
+- Symptoms: Bulge in groin/scrotum area, worse on standing/coughing, reducible (can push back in), pain/discomfort
+- Diagnosis: Clinical examination, Ultrasound
+- Treatment: Surgical repair (mesh repair — TEP/TAPP) is the only definitive treatment. Trusses (belt) are temporary. Risk: Incarceration/strangulation if untreated → emergency
+
+GALLSTONES (Cholelithiasis):
+- Symptoms: Right upper abdominal pain (biliary colic), worse after fatty meals, radiates to right shoulder, nausea, bloating. Asymptomatic in many
+- Diagnosis: Ultrasound abdomen (95% sensitive), LFT may be elevated
+- Treatment: Asymptomatic: No treatment needed. Symptomatic: Laparoscopic Cholecystectomy (gold standard). Pain: NSAIDs, antispasmodics
+
+APPENDICITIS:
+- Symptoms: Pain starts around umbilicus → moves to right lower abdomen (McBurney's point), nausea, vomiting, low-grade fever, loss of appetite, pain worsens on walking/coughing
+- Diagnosis: Clinical (Rovsing's sign, rebound tenderness), CBC (WBC elevated), CT abdomen (most accurate)
+- Treatment: Emergency surgery (Appendectomy — laparoscopic). Do NOT give painkillers before diagnosis (masks symptoms). Do NOT eat/drink
+
+THYROID — GOITRE:
+- Symptoms: Visible/enlarged neck swelling, difficulty swallowing, hoarse voice, sometimes breathing difficulty
+- Diagnosis: Ultrasound neck, Thyroid function tests, FNAC (if nodule)
+- Treatment: Depends on cause — Euthyroid goitre may need surgery if large. Toxic goitre: Anti-thyroid drugs, radioactive iodine, surgery
+
+VITAMIN D DEFICIENCY (Very common in India):
+- Symptoms: Bone pain (especially back), muscle weakness, fatigue, frequent falls, mood changes
+- Diagnosis: 25-OH Vitamin D level. Normal >30 ng/mL. Deficient <20. Severe <10
+- Treatment: Severe deficiency: 60,000 IU weekly x 8-12 weeks, then maintenance 1000-2000 IU/day. Take with fatty food for absorption. Calcium supplements alongside. Sunlight 15-20 min/day (arms and face exposed)
+
+VITAMIN B12 DEFICIENCY (Very common in vegetarians):
+- Symptoms: Fatigue, weakness, tingling/numbness in hands and feet, memory problems, mood changes, glossitis (smooth tongue)
+- Diagnosis: Serum B12 level (<200 pg/mL deficient), MCV elevated (macrocytic anemia)
+- Treatment: Oral supplementation (Methylcobalamin 1000mcg/day or weekly). Severe: IM injections. Long-term in vegetarians. Fortified foods (plant milk, nutritional yeast)
 `,
-    keywords: ["diabetes", "blood pressure", "hypertension", "thyroid", "anemia", "migraine", "uti", "infection", "dengue", "malaria", "tb", "tuberculosis", "asthma", "gerd", "acid reflux", "depression", "pcos", "sugar", "cholesterol"]
+    keywords: ["diabetes", "blood pressure", "hypertension", "thyroid", "anemia", "migraine", "uti", "infection", "dengue", "malaria", "tb", "tuberculosis", "asthma", "gerd", "acid reflux", "depression", "pcos", "sugar", "cholesterol", "kidney stone", "kidney stones", "renal stone", "stone", "arthritis", "joint pain", "joint", "knee pain", "back pain", "allergy", "allergies", "allergic", "rhinitis", "hives", "urticaria", "eczema", "dermatitis", "skin", "psoriasis", "acne", "pimple", "pimples", "fungal", "ringworm", "tinea", "eye", "eyes", "conjunctivitis", "pink eye", "dry eye", "stye", "ear", "ear infection", "sinus", "sinusitis", "tonsil", "tonsillitis", "tinnitus", "ringing ears", "ibs", "irritable bowel", "ulcer", "peptic ulcer", "diarrhea", "loose motion", "piles", "hemorrhoids", "hernia", "hernia groin", "gallstone", "gallstones", "appendicitis", "appendix", "vitamin d", "vitamin b12", "b12 deficiency", "goitre", "goiter", "neck swelling", "computer vision", "screen time", "eye strain"]
   },
 
   // ═══════════════════════════════════════════════════════════
@@ -198,14 +340,55 @@ DICLOFENAC (Voveran, Cataflam):
 - Warning: GI bleeding risk. Avoid with kidney disease. Use lowest effective dose
 
 DOLO-650: Paracetamol 650mg — same as above for paracetamol
-
 PAN 40 (Pantoprazole 40mg): Same as above for pantoprazole
-
 NEUROBION/Becosules: B-complex vitamins. Generally safe. For fatigue, nerve health
-
 ORS (Oral Rehydration Salts): For dehydration (diarrhea, vomiting, heat). Mix 1 packet in 1L water. Sip frequently
+
+FLUOXACILLIN (Floxacillin, Floxpen):
+- Dose: 500mg every 6 hours for 5-7 days
+- Used for: Skin infections, cellulitis, boils, bone infections
+- Warning: Take on empty stomach
+
+DOXYCYCLINE (Doxylar, Doxynil):
+- Dose: 100mg 1-2x/day
+- Used for: Acne, respiratory infections, STIs, malaria prophylaxis
+- Warning: Avoid in pregnancy, children <8. Take with full glass of water, stay upright 30 min. Sun sensitivity — use sunscreen
+
+CLARITHROMycin (Clarith, Klaricid):
+- Dose: 250-500mg every 12 hours for 7-14 days
+- Used for: H. pylori (stomach ulcer), respiratory infections
+- Warning: Drug interactions. Take with or without food
+
+TERBINAFINE (Terbinafine, Lamisil):
+- Dose: 250mg/day x 2-4 weeks (fungal skin), 6 weeks (nails)
+- Used for: Fungal infections (ringworm, athlete's foot, nail fungus)
+- Warning: Monitor liver function if prolonged use
+
+CEFIXIME (Cefix, Taxim-O):
+- Dose: 200mg every 12 hours for 5-10 days
+- Used for: UTI, respiratory infections, typhoid
+- Warning: Complete full course. May cause diarrhea
+
+NORFLOXACIN (Norflox, Noroxin):
+- Dose: 400mg every 12 hours for 3-7 days
+- Used for: UTI, diarrhea
+- Warning: Avoid in pregnancy. Take on empty stomach. Sun sensitivity
+
+MONTELUKAST (Montair, Montecair):
+- Dose: 10mg once daily at bedtime
+- Used for: Asthma, allergic rhinitis, exercise-induced bronchospasm
+- Warning: Not for acute attacks. For maintenance therapy
+
+LEVOCETIRIZINE (Xyzal, L-Cet):
+- Dose: 5mg once daily at bedtime
+- Used for: Allergies, urticaria, rhinitis
+- Warning: Less sedating than cetirizine. Safe for long-term use in chronic allergies
+
+OMEBEST/OMEE: Omeprazole 20mg — same as above
+ASPIRIN (Low-dose 75mg): For heart attack prevention (blood thinner). Take with food. Avoid in children <16 (Reye's syndrome)
+WARFARIN/CLOPIDOGREL: Blood thinners. Monitor INR regularly. Avoid extra bleeding risk.
 `,
-    keywords: ["medicine", "drug", "tablet", "capsule", "dose", "dosage", "paracetamol", "ibuprofen", "antibiotic", "allergy", "cetirizine", "omeprazole", "metformin", "prescription", "medication", "pill", "side effect"]
+    keywords: ["medicine", "drug", "tablet", "capsule", "dose", "dosage", "paracetamol", "ibuprofen", "antibiotic", "allergy", "cetirizine", "omeprazole", "metformin", "prescription", "medication", "pill", "side effect", "terbinafine", "fluoxacillin", "doxycycline", "ceftriaxone", "azithromycin", "antifungal", "fluconazole"]
   },
 
   // ═══════════════════════════════════════════════════════════
@@ -272,6 +455,43 @@ SKIN RASH:
 5. Any fever with it?
 6. Any blisters, pus, or oozing?
 
+BACK PAIN:
+1. Where exactly? (lower back, upper back, neck?)
+2. Does it radiate to legs/buttocks? (sciatica)
+3. Worse with sitting, standing, bending?
+4. Any trauma/ injury?
+5. Any morning stiffness?
+6. Any numbness/tingling in legs?
+7. Any bladder/bowel changes? (cauda equina = emergency)
+
+KIDNEY STONE PAIN:
+1. Where is the pain? (flank, lower abdomen, groin?)
+2. Is it colicky (comes and goes in waves)?
+3. Any blood in urine?
+4. Any burning during urination?
+5. Any nausea/vomiting?
+6. Any previous stones?
+7. How much water do you drink daily?
+
+SKIN / DERMATOLOGY:
+1. When did it start?
+2. Is it itchy, painful, or both?
+3. Any new soap, detergent, jewelry, food, medicine?
+4. Where did it start? Is it spreading?
+5. Any fever with it?
+6. Any blisters, pus, or oozing?
+7. Has it been treated before? What worked/didn't?
+8. Is it worse in certain seasons?
+
+EYE PROBLEMS:
+1. Which eye? Both or one?
+2. Redness, pain, discharge, blurred vision?
+3. How long has this been going on?
+4. Any trauma or foreign body?
+5. Screen time hours per day?
+6. Any contact lens use?
+7. Any recent illness?
+
 GENERAL HISTORY FRAMEWORK (SOCRATES for pain):
 S - Site: Where?
 O - Onset: When? Sudden or gradual?
@@ -336,6 +556,10 @@ THYROID:
 TSH: Normal 0.4-4.0 mIU/L. High = hypothyroidism. Low = hyperthyroidism
 Free T4: Normal 0.8-1.8 ng/dL
 
+VITAMIN D:
+Normal: >30 ng/mL. Deficient: <20. Severe: <10
+Vitamin B12: Normal: 200-900 pg/mL. Deficient: <200
+
 URINE ROUTINE:
 pH: Normal 4.5-8.0
 Sugar: Should be negative. Positive = diabetes
@@ -343,6 +567,7 @@ Protein: Should be negative. Positive = kidney disease, UTI
 Leukocytes: Negative. Positive = UTI/infection
 Nitrites: Negative. Positive = bacterial UTI
 Blood: Should be negative. Positive = UTI, stones, kidney disease
+Crystals: May indicate kidney stones (calcium oxalate, uric acid)
 
 CHEST X-RAY INTERPRETATION:
 - Clear lung fields = normal
@@ -367,7 +592,7 @@ BLOOD PRESSURE INTERPRETATION:
 - Stage 2 HTN: ≥140/90
 - Hypertensive Crisis: >180/120 → seek emergency care
 `,
-    keywords: ["report", "test", "results", "blood test", "cbc", "lft", "kft", "sugar", "thyroid", "cholesterol", "ecg", "x-ray", "xray", "scan", "mri", "ultrasound", "urine", "hemoglobin", "creatinine", "sgot", "sgpt", "tsh"]
+    keywords: ["report", "test", "results", "blood test", "cbc", "lft", "kft", "sugar", "thyroid", "cholesterol", "ecg", "x-ray", "xray", "scan", "mri", "ultrasound", "urine", "hemoglobin", "creatinine", "sgot", "sgpt", "tsh", "vitamin d", "vitamin b12", "b12", "urea", "uric acid", "lipid"]
   },
 
   // ═══════════════════════════════════════════════════════════

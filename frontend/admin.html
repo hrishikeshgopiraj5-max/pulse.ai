@@ -77,10 +77,11 @@
         <button class="admin-tab" data-filter="approved">Approved</button>
         <button class="admin-tab" data-filter="rejected">Rejected</button>
         <button class="admin-tab" data-filter="">All</button>
+        <button class="admin-tab" data-filter="analytics">Analytics</button>
       </div>
 
       <!-- Sign-ups table -->
-      <div class="admin-table-wrap">
+      <div class="admin-table-wrap" id="adminTableWrap">
         <table class="admin-table" id="adminTable">
           <thead>
             <tr>
@@ -96,6 +97,32 @@
             <tr><td colspan="6" class="table-empty">Loading...</td></tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Analytics panel (hidden by default) -->
+      <div class="analytics-panel" id="analyticsPanel" style="display:none;">
+        <div class="analytics-stats">
+          <div class="stat-card">
+            <span class="stat-number" id="analyticsTotal">0</span>
+            <span class="stat-label">Total Queries</span>
+          </div>
+          <div class="stat-card stat-pending">
+            <span class="stat-number" id="analyticsBlocked">0</span>
+            <span class="stat-label">Non-Medical Blocked</span>
+          </div>
+          <div class="stat-card stat-rejected">
+            <span class="stat-number" id="analyticsEmergency">0</span>
+            <span class="stat-label">Emergencies Detected</span>
+          </div>
+        </div>
+        <h3 class="analytics-section-title">Most Asked Topics</h3>
+        <div class="analytics-topics" id="analyticsTopics">
+          <p class="table-empty">No data yet. Queries will appear as users chat.</p>
+        </div>
+        <h3 class="analytics-section-title">Recent Queries</h3>
+        <div class="analytics-recent" id="analyticsRecent">
+          <p class="table-empty">No recent queries.</p>
+        </div>
       </div>
     </main>
   </div>

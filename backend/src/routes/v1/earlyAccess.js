@@ -17,5 +17,6 @@ router.get("/count", requireAdmin, EarlyAccessController.count);
 router.get("/", requireAdmin, EarlyAccessController.list);
 router.post("/:id/approve", requireAdmin, EarlyAccessController.approve);
 router.post("/:id/reject", requireAdmin, EarlyAccessController.reject);
+router.get("/analytics", requireAdmin, EarlyAccessController.analytics);
 
 module.exports = router;
