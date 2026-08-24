@@ -24,6 +24,7 @@ const EarlyAccessController = {
       logger.info({ email: result.email }, "Early access sign-up");
       res.status(201).json(success("You're on the list! We'll be in touch.", result));
     } catch (err) {
+      logger.error({ err: { message: err.message, code: err.code, detail: err.detail, hint: err.hint, position: err.position, table: err.table, column: err.column, constraint: err.constraint }, body: req.body }, "Subscribe error details");
       next(err);
     }
   },
