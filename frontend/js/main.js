@@ -351,6 +351,130 @@
     });
   }
 
+  // ─── Google Sign-Up (Early Access) ────────────────────────
+  const googleSignupBtn = document.getElementById('googleSignupBtn');
+  if (googleSignupBtn) {
+    googleSignupBtn.addEventListener('click', async () => {
+      isSigningUp = true;
+      status.textContent = 'Opening Google sign-in...';
+      status.className = 'form-status';
+      googleSignupBtn.disabled = true;
+
+      try {
+        const user = await Auth.signInWithGoogle();
+
+        status.textContent = 'Registering for early access...';
+
+        let res;
+        try {
+          res = await fetch(`${API}/early-access`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: user.email,
+              firebase_uid: user.uid,
+              name: user.displayName || '',
+              source: 'google',
+            }),
+          });
+        } catch (networkErr) {
+          try { await user.delete(); } catch {}
+          await Auth.logout();
+          status.textContent = 'Could not reach the server. Please try again.';
+          status.className = 'form-status error';
+          return;
+        }
+
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          await Auth.logout();
+          status.textContent = data.detail || 'Registration failed. Please try again.';
+          status.className = 'form-status error';
+          return;
+        }
+
+        await Auth.logout();
+        form.style.display = 'none';
+        if (pendingApproval) {
+          pendingApproval.style.display = 'block';
+          pendingEmail.textContent = user.email;
+        }
+        status.textContent = '';
+
+      } catch (err) {
+        if (err.code === 'auth/popup-closed-by-user') {
+          status.textContent = '';
+        } else {
+          status.textContent = friendlyError(err.code) || 'Google sign-in failed. Please try again.';
+          status.className = 'form-status error';
+        }
+        try { await Auth.logout(); } catch {}
+      } finally {
+        isSigningUp = false;
+        googleSignupBtn.disabled = false;
+      }
+    });
+  }
+
+  // ─── Google Login (Auth Modal) ────────────────────────────
+  const googleLoginBtn = document.getElementById('googleLoginBtn');
+  if (googleLoginBtn) {
+    googleLoginBtn.addEventListener('click', async () => {
+      loginInProgress = true;
+      loginError.textContent = 'Opening Google sign-in...';
+      loginError.style.color = 'var(--ink-muted)';
+      googleLoginBtn.disabled = true;
+
+      try {
+        const user = await Auth.signInWithGoogle();
+
+        loginError.textContent = 'Checking access status...';
+
+        let statusRes;
+        try {
+          statusRes = await fetch(`${API}/early-access/status?email=${encodeURIComponent(user.email)}`);
+        } catch (networkErr) {
+          await Auth.logout().catch(() => {});
+          loginError.textContent = 'Could not verify access status. Check your connection.';
+          loginError.style.color = '';
+          return;
+        }
+
+        const statusData = await statusRes.json().catch(() => ({}));
+        const userStatus = statusData?.data?.status;
+
+        if (!statusRes.ok || !userStatus || userStatus === 'pending') {
+          await Auth.logout().catch(() => {});
+          loginError.textContent = 'Your account is pending admin approval.';
+          loginError.style.color = '';
+          return;
+        }
+        if (userStatus === 'rejected') {
+          await Auth.logout().catch(() => {});
+          loginError.textContent = 'Your early access request was not approved.';
+          loginError.style.color = '';
+          return;
+        }
+
+        loginError.textContent = '';
+        closeAuthModal();
+
+      } catch (err) {
+        if (err.code === 'auth/popup-closed-by-user') {
+          loginError.textContent = '';
+        } else {
+          loginError.textContent = friendlyError(err.code) || 'Google sign-in failed. Please try again.';
+          loginError.style.color = '';
+        }
+        try { await Auth.logout().catch(() => {}); } catch {}
+      } finally {
+        loginInProgress = false;
+        googleLoginBtn.disabled = false;
+      }
+    });
+  }
+
   // ─── Chat Widget ─────────────────────────────────────────
   const chatToggle = document.getElementById('chatToggle');
   const chatPanel = document.getElementById('chatPanel');

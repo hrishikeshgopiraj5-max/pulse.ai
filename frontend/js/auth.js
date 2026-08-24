@@ -51,6 +51,15 @@ const Auth = (() => {
     return cred.user;
   }
 
+  // ─── Google Sign-In ──────────────────────────────────────
+  async function signInWithGoogle() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.addScope('email');
+    provider.addScope('profile');
+    const cred = await auth.signInWithPopup(provider);
+    return cred.user;
+  }
+
   // ─── Logout ───────────────────────────────────────────────
   async function logout() {
     await auth.signOut();
@@ -75,6 +84,7 @@ const Auth = (() => {
   return {
     register,
     login,
+    signInWithGoogle,
     logout,
     getIdToken,
     getUser,
