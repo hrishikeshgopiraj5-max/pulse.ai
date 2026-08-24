@@ -40,7 +40,10 @@
   const loginError = document.getElementById('loginError');
   const registerError = document.getElementById('registerError');
   const navAuthGuest = document.getElementById('navAuthGuest');
+  const navAuthGuestLogin = document.getElementById('navAuthGuestLogin');
   const navAuthUser = document.getElementById('navAuthUser');
+  const navAuthUserLogout = document.getElementById('navAuthUserLogout');
+  const navLoginBtn = document.getElementById('navLoginBtn');
   const navLogoutBtn = document.getElementById('navLogoutBtn');
 
   function openAuthModal(tab = 'login') {
@@ -116,7 +119,13 @@
         const statusData = await statusRes.json().catch(() => ({}));
         const userStatus = statusData?.data?.status;
 
-        if (!statusRes.ok || !userStatus || userStatus === 'pending') {
+        if (statusRes.status === 404 || !userStatus) {
+          await Auth.logout().catch(() => {});
+          loginError.innerHTML = 'You haven\'t signed up for early access yet. <a href="#early-access" onclick="document.getElementById(\'authModal\').classList.remove(\'open\')" style="color:var(--red);text-decoration:underline;">Get Early Access first</a>';
+          loginError.style.color = '';
+          return;
+        }
+        if (userStatus === 'pending') {
           await Auth.logout().catch(() => {});
           loginError.textContent = 'Your account is pending admin approval. You\'ll be able to log in once approved.';
           loginError.style.color = '';
@@ -165,6 +174,14 @@
     });
   }
 
+  // ─── Nav Login Button ─────────────────────────────────────
+  if (navLoginBtn) {
+    navLoginBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openAuthModal('login');
+    });
+  }
+
   // ─── Logout ──────────────────────────────────────────────
   if (navLogoutBtn) {
     navLogoutBtn.addEventListener('click', async (e) => {
@@ -193,18 +210,30 @@
           window.location.href = '/chat.html';
           return;
         }
-        // Not approved — sign out
+        // Not approved — sign out and show guest nav
         await Auth.logout();
       } catch {
         // Network error — show guest nav
       }
-      navAuthGuest.style.display = 'block';
-      navAuthUser.style.display = 'none';
+      showGuestNav();
     } else {
-      navAuthGuest.style.display = 'block';
-      navAuthUser.style.display = 'none';
+      showGuestNav();
     }
   });
+
+  function showGuestNav() {
+    if (navAuthGuest) navAuthGuest.style.display = 'block';
+    if (navAuthGuestLogin) navAuthGuestLogin.style.display = 'block';
+    if (navAuthUser) navAuthUser.style.display = 'none';
+    if (navAuthUserLogout) navAuthUserLogout.style.display = 'none';
+  }
+
+  function showUserNav() {
+    if (navAuthGuest) navAuthGuest.style.display = 'none';
+    if (navAuthGuestLogin) navAuthGuestLogin.style.display = 'none';
+    if (navAuthUser) navAuthUser.style.display = 'block';
+    if (navAuthUserLogout) navAuthUserLogout.style.display = 'block';
+  }
 
   // ─── Firebase error messages ─────────────────────────────
   function friendlyError(code) {

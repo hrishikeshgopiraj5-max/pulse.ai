@@ -1428,6 +1428,29 @@ footer {
   background: transparent;
 }
 
+.nav-cta-outline {
+  background: transparent;
+  color: var(--ink-muted);
+  border: 1px solid var(--line);
+}
+
+.nav-cta-outline:hover {
+  border-color: var(--red);
+  color: var(--red);
+  background: transparent;
+}
+
+#navAuthUserLogout .nav-cta-outline {
+  background: transparent;
+  color: var(--ink-muted);
+  border: 1px solid var(--line);
+}
+
+#navAuthUserLogout .nav-cta-outline:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
 /* ============================================================
    CHAT WIDGET
    ============================================================ */
