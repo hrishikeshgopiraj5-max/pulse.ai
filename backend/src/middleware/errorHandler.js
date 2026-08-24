@@ -31,6 +31,10 @@ function errorHandler(err, req, res, _next) {
   }
 
   // Send response — never leak internals in production
+  // But log the full error for debugging
+  if (statusCode >= 500) {
+    logger.error({ err: { message: err.message, code: err.code, detail: err.detail, stack: err.stack }, requestId: req.id, path: req.originalUrl, method: req.method }, "500 error details");
+  }
   const message = err.isOperational ? err.message : "An unexpected error occurred.";
   const meta = {};
 

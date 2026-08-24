@@ -21,33 +21,75 @@ const EarlyAccess = {
   },
 
   async create({ id, email, firebase_uid, name, source = "website" }) {
-    const { rows } = await query(
-      `INSERT INTO early_access_signups (id, email, firebase_uid, name, source, status)
-       VALUES ($1, $2, $3, $4, $5, 'pending')
-       RETURNING id, email, firebase_uid, name, source, status, email_verified, subscribed_at`,
-      [id, email, firebase_uid, name, source]
-    );
-    return rows[0];
+    try {
+      const { rows } = await query(
+        `INSERT INTO early_access_signups (id, email, firebase_uid, name, source, status)
+         VALUES ($1, $2, $3, $4, $5, 'pending')
+         RETURNING id, email, firebase_uid, name, source, status, email_verified, subscribed_at`,
+        [id, email, firebase_uid, name, source]
+      );
+      return rows[0];
+    } catch (err) {
+      // If RETURNING clause references a missing column, fall back to basic columns
+      if (err.code === "42703") { // undefined_column
+        const { rows } = await query(
+          `INSERT INTO early_access_signups (id, email, firebase_uid, name, source, status)
+           VALUES ($1, $2, $3, $4, $5, 'pending')
+           RETURNING id, email, firebase_uid, name, source, status`,
+          [id, email, firebase_uid, name, source]
+        );
+        return rows[0];
+      }
+      throw err;
+    }
   },
 
   async updateStatus(id, { status, admin_note, reviewed_at }) {
-    const { rows } = await query(
-      `UPDATE early_access_signups
-       SET status = $1, admin_note = $2, reviewed_at = $3, updated_at = NOW()
-       WHERE id = $4
-       RETURNING id, email, firebase_uid, name, status, admin_note, reviewed_at`,
-      [status, admin_note || null, reviewed_at || new Date().toISOString(), id]
-    );
-    return rows[0] || null;
+    try {
+      const { rows } = await query(
+        `UPDATE early_access_signups
+         SET status = $1, admin_note = $2, reviewed_at = $3, updated_at = NOW()
+         WHERE id = $4
+         RETURNING id, email, firebase_uid, name, status, admin_note, reviewed_at`,
+        [status, admin_note || null, reviewed_at || new Date().toISOString(), id]
+      );
+      return rows[0] || null;
+    } catch (err) {
+      // If updated_at column doesn't exist, update without it
+      if (err.code === "42703") {
+        const { rows } = await query(
+          `UPDATE early_access_signups
+           SET status = $1, admin_note = $2, reviewed_at = $3
+           WHERE id = $4
+           RETURNING id, email, firebase_uid, name, status, admin_note, reviewed_at`,
+          [status, admin_note || null, reviewed_at || new Date().toISOString(), id]
+        );
+        return rows[0] || null;
+      }
+      throw err;
+    }
   },
 
   async setEmailVerified(email) {
-    const { rows } = await query(
-      `UPDATE early_access_signups SET email_verified = TRUE, updated_at = NOW()
-       WHERE email = $1 RETURNING id, email, email_verified`,
-      [email]
-    );
-    return rows[0] || null;
+    try {
+      const { rows } = await query(
+        `UPDATE early_access_signups SET email_verified = TRUE, updated_at = NOW()
+         WHERE email = $1 RETURNING id, email, email_verified`,
+        [email]
+      );
+      return rows[0] || null;
+    } catch (err) {
+      // If updated_at column doesn't exist, update without it
+      if (err.code === "42703") {
+        const { rows } = await query(
+          `UPDATE early_access_signups SET email_verified = TRUE
+           WHERE email = $1 RETURNING id, email, email_verified`,
+          [email]
+        );
+        return rows[0] || null;
+      }
+      throw err;
+    }
   },
 
   async count() {
