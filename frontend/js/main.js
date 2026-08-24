@@ -174,7 +174,14 @@
   }
 
   // ─── Auth state → redirect approved users to /chat ───────
+  // Guard flag to prevent redirect during signup flow
+  let isSigningUp = false;
+
   Auth.onAuthChange(async (user) => {
+    // Skip redirect check during signup — signup creates a Firebase account
+    // but the user isn't in the backend yet, so status check would fail
+    if (isSigningUp) return;
+
     if (user) {
       // Check approval status, then redirect approved users to chat
       try {
@@ -234,6 +241,7 @@
   if (form) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      isSigningUp = true; // Prevent onAuthChange from signing out during signup
       status.textContent = 'Creating your account...';
       status.className = 'form-status';
 
@@ -268,7 +276,6 @@
         // Step 3: Send email verification (non-blocking — don't fail if this errors)
         status.textContent = 'Sending verification email...';
         firebaseUser.sendEmailVerification().catch(() => {
-          // Email verification failed — not critical, continue
           console.warn('Email verification could not be sent');
         });
 
@@ -287,10 +294,14 @@
             }),
           });
         } catch (networkErr) {
-          // Network error — Firebase account exists but backend registration failed
-          // Sign out and tell user to try again (their Firebase account exists, so they can log in)
+          // Network error — delete Firebase account so user can re-register
+          try {
+            if (firebaseUser) await firebaseUser.delete();
+          } catch (deleteErr) {
+            console.warn('Could not delete Firebase account:', deleteErr);
+          }
           await firebase.auth().signOut();
-          status.textContent = 'Account created but registration failed. Please try logging in.';
+          status.textContent = 'Could not reach the server. Your account was not created. Please try again.';
           status.className = 'form-status error';
           return;
         }
@@ -298,7 +309,12 @@
         const data = await res.json().catch(() => ({}));
 
         if (!res.ok) {
-          // Backend rejected — e.g. duplicate email in early access table
+          // Backend rejected — delete Firebase account so user can re-register
+          try {
+            if (firebaseUser) await firebaseUser.delete();
+          } catch (deleteErr) {
+            console.warn('Could not delete Firebase account:', deleteErr);
+          }
           await firebase.auth().signOut();
           status.textContent = data.detail || 'Registration failed. Please try again.';
           status.className = 'form-status error';
@@ -318,12 +334,19 @@
 
       } catch (err) {
         console.error('Early access signup error:', err);
-        // If Firebase account was created but something else failed, clean up
+        // If Firebase account was created but something else failed, delete it
         if (firebaseUser) {
+          try {
+            await firebaseUser.delete();
+          } catch (deleteErr) {
+            console.warn('Could not delete Firebase account:', deleteErr);
+          }
           try { await firebase.auth().signOut(); } catch {}
         }
         status.textContent = friendlyError(err.code) || 'Something went wrong. Please try again.';
         status.className = 'form-status error';
+      } finally {
+        isSigningUp = false;
       }
     });
   }

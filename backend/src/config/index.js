@@ -55,10 +55,12 @@ const config = Object.freeze({
 
   // CORS
   // In production, set CORS_ORIGINS=https://your-app.vercel.app
-  // For Vercel previews, you may need a wildcard pattern.
+  // If not set in production, allow all origins (not ideal but prevents silent failures)
   CORS_ORIGINS: process.env.CORS_ORIGINS
     ? process.env.CORS_ORIGINS.split(",").map((o) => o.trim())
-    : ["http://localhost:3000", "http://localhost:8000", "http://127.0.0.1:3000"],
+    : (process.env.NODE_ENV === "production"
+      ? ["*"]
+      : ["http://localhost:3000", "http://localhost:8000", "http://127.0.0.1:3000"]),
 
   // Rate limiting
   RATE_LIMIT_WINDOW_MS: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000,

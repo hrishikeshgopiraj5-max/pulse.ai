@@ -52,14 +52,22 @@ app.use(
 );
 
 // ─── CORS ───────────────────────────────────────────────────
+// When CORS_ORIGINS includes '*', disable credentials (browser requirement)
+const corsOrigins = config.CORS_ORIGINS;
+const hasWildcard = corsOrigins.includes('*');
 app.use(
   cors({
-    origin: config.CORS_ORIGINS,
-    credentials: true,
+    origin: hasWildcard ? true : corsOrigins,
+    credentials: !hasWildcard,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Request-ID", "X-Admin-Key"],
   })
 );
+
+// Warn if CORS is not configured in production
+if (config.IS_PROD && hasWildcard) {
+  console.warn('\n⚠️  CORS_ORIGINS is not set — allowing ALL origins. Set CORS_ORIGINS on Render for production.\n');
+}
 
 // ─── Rate Limiting ──────────────────────────────────────────
 app.use(
