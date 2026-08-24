@@ -14,26 +14,33 @@
 const config = require("../config");
 const logger = require("../lib/logger");
 
-let admin;
+let auth = null;
 let firebaseReady = false;
 
 try {
-  admin = require("firebase-admin");
-
   if (config.FIREBASE_PROJECT_ID && config.FIREBASE_CLIENT_EMAIL && config.FIREBASE_PRIVATE_KEY) {
-    if (!admin.apps || admin.apps.length === 0) {
-      admin.initializeApp({
-        credential: admin.credential.cert({
+    const { initializeApp, cert, getApps } = require("firebase-admin/app");
+    const { getAuth } = require("firebase-admin/auth");
+
+    // Fix newlines in private key — Render stores them as literal \n
+    const privateKey = config.FIREBASE_PRIVATE_KEY
+      .replace(/\\\\n/g, "\n")
+      .replace(/\\n/g, "\n");
+
+    if (getApps().length === 0) {
+      initializeApp({
+        credential: cert({
           projectId: config.FIREBASE_PROJECT_ID,
           clientEmail: config.FIREBASE_CLIENT_EMAIL,
-          privateKey: config.FIREBASE_PRIVATE_KEY.replace(/\\\\n/g, "\n"),
+          privateKey: privateKey,
         }),
       });
     }
+    auth = getAuth();
     firebaseReady = true;
   }
 } catch (err) {
-  logger.warn({ err: err.message }, "Firebase Admin SDK initialization failed");
+  logger.error({ err: err.message, stack: err.stack }, "Firebase Admin SDK initialization failed");
 }
 
 // Import models at module level (not inside functions)
@@ -73,7 +80,7 @@ async function requireAuth(req, res, next) {
   }
 
   try {
-    const decodedToken = await admin.auth().verifyIdToken(token, true); // checkRevoked = true
+    const decodedToken = await auth.verifyIdToken(token, true); // checkRevoked = true
     req.user = {
       uid: decodedToken.uid,
       email: decodedToken.email || null,
@@ -101,7 +108,7 @@ async function optionalAuth(req, res, next) {
   const token = extractBearerToken(req);
   if (token) {
     try {
-      const decodedToken = await admin.auth().verifyIdToken(token);
+      const decodedToken = await auth.verifyIdToken(token);
       req.user = {
         uid: decodedToken.uid,
         email: decodedToken.email || null,
@@ -132,7 +139,7 @@ async function requireApproved(req, res, next) {
 
   try {
     // Step 1: Verify Firebase token
-    const decodedToken = await admin.auth().verifyIdToken(token, true);
+    const decodedToken = await auth.verifyIdToken(token, true);
     req.user = {
       uid: decodedToken.uid,
       email: decodedToken.email || null,
