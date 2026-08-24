@@ -85,8 +85,15 @@ Be warm, professional, and thorough. You are their trusted first step toward und
 /**
  * Build the messages array for the OpenRouter API.
  */
-function buildMessages(userMessage, conversationHistory = []) {
-  const messages = [{ role: "system", content: SYSTEM_PROMPT }];
+function buildMessages(userMessage, conversationHistory = [], healthProfile = null) {
+  // Build enhanced system prompt with health profile context
+  let systemContent = SYSTEM_PROMPT;
+
+  if (healthProfile) {
+    systemContent += `\n\n═══════════════════════════════════════════════════════════\nPATIENT HEALTH PROFILE (this user's personal health information):\n═══════════════════════════════════════════════════════════\n${healthProfile}\n\nIMPORTANT: Use this profile to personalize your responses. Consider their age, existing conditions, current medications, and allergies when providing guidance. If their question relates to any of their known conditions, tailor your advice accordingly. Always check if new symptoms could be related to their existing conditions or medications.\n`;
+  }
+
+  const messages = [{ role: "system", content: systemContent }];
 
   // Add conversation history (last 12 messages for medical context)
   const recentHistory = conversationHistory.slice(-12);
@@ -152,7 +159,7 @@ async function callModel(model, messages, signal) {
  * The AI is strictly medical-only via system prompt.
  * Knowledge base provides accurate data for free models.
  */
-async function chat(userMessage, conversationHistory = []) {
+async function chat(userMessage, conversationHistory = [], healthProfile = null) {
   if (!config.OPENROUTER_API_KEY) {
     return {
       content:
@@ -160,7 +167,7 @@ async function chat(userMessage, conversationHistory = []) {
     };
   }
 
-  const messages = buildMessages(userMessage, conversationHistory);
+  const messages = buildMessages(userMessage, conversationHistory, healthProfile);
 
   // Build model list: primary first, then fallbacks
   const models = [config.OPENROUTER_PRIMARY_MODEL, ...config.OPENROUTER_FALLBACK_MODELS];

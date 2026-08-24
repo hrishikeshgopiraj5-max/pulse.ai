@@ -190,6 +190,19 @@
   background: rgba(220, 47, 61, 0.1);
 }
 
+.sidebar-link {
+  color: #6b6b7e;
+  padding: 6px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+  text-decoration: none;
+}
+
+.sidebar-link:hover {
+  color: #dc2f3d;
+  background: rgba(220, 47, 61, 0.1);
+}
+
 /* ---------- Main Chat Area ---------- */
 .chat-main {
   flex: 1;

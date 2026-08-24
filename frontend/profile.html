@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pulse AI — Health Profile</title>
+
+  <!-- Meta -->
+  <meta name="description" content="Pulse AI Health Profile — Store your health information for personalized AI responses.">
+  <meta name="theme-color" content="#FCFCFB">
+
+  <!-- Favicon -->
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/profile.css">
+
+  <!-- API Configuration -->
+  <script>window.__PULSE_API_URL__ = 'https://pulse-ai-r2d1.onrender.com/api/v1';</script>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+</head>
+<body class="profile-page">
+
+  <!-- ========== HEADER ========== -->
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-inner">
+      <a href="/" class="logo">
+        <svg class="logo-mark" viewBox="0 0 64 64" width="28" height="28">
+          <circle cx="32" cy="32" r="30" fill="#DC2F3D"/>
+          <path d="M8 32H22L27 18L36 46L41 32H56" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Pulse AI
+      </a>
+      <div class="nav-right">
+        <a href="/chat.html" class="btn btn-outline btn-sm">← Back to Chat</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <main class="profile-main">
+    <div class="container">
+      <div class="profile-header">
+        <div class="profile-icon">
+          <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Your Health Profile</h1>
+          <p class="profile-subtitle">Share your health information so Pulse AI can give you personalized, relevant guidance.</p>
+        </div>
+      </div>
+
+      <form id="profileForm" class="profile-form">
+        <!-- ── Section: Basic Info ── -->
+        <section class="profile-section">
+          <h2>Basic Information</h2>
+          <p class="section-desc">Helps AI understand your body context</p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="profileGender">Gender</label>
+              <select id="profileGender">
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+                <option value="prefer-not-to-say">Prefer not to say</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="profileDOB">Date of Birth</label>
+              <input type="date" id="profileDOB">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="profileHeight">Height (cm)</label>
+              <input type="number" id="profileHeight" placeholder="e.g. 170" min="50" max="250">
+            </div>
+            <div class="form-group">
+              <label for="profileWeight">Weight (kg)</label>
+              <input type="number" id="profileWeight" placeholder="e.g. 65" min="20" max="300" step="0.1">
+            </div>
+            <div class="form-group">
+              <label for="profileBloodType">Blood Type</label>
+              <select id="profileBloodType">
+                <option value="">Select</option>
+                <option value="A+">A+</option>
+                <option value="A-">A−</option>
+                <option value="B+">B+</option>
+                <option value="B-">B−</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB−</option>
+                <option value="O+">O+</option>
+                <option value="O-">O−</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── Section: Medical Conditions ── -->
+        <section class="profile-section">
+          <h2>Medical History</h2>
+          <p class="section-desc">Existing conditions help AI spot patterns and interactions</p>
+
+          <div class="form-group">
+            <label for="profileConditions">Known Medical Conditions</label>
+            <div class="tag-input-wrap">
+              <div class="tags-container" id="conditionsTags"></div>
+              <input type="text" id="profileConditions" placeholder="Type a condition and press Enter (e.g. diabetes, hypertension)">
+            </div>
+            <p class="field-hint">Examples: Diabetes, Hypertension, Asthma, Thyroid, PCOD, Migraine, Arthritis</p>
+          </div>
+
+          <div class="form-group">
+            <label for="profileSurgeries">Past Surgeries</label>
+            <div class="tag-input-wrap">
+              <div class="tags-container" id="surgeriesTags"></div>
+              <input type="text" id="profileSurgeries" placeholder="Type a surgery and press Enter (e.g. appendectomy)">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="profileFamilyHistory">Family Medical History</label>
+            <div class="tag-input-wrap">
+              <div class="tags-container" id="familyHistoryTags"></div>
+              <input type="text" id="profileFamilyHistory" placeholder="Type and press Enter (e.g. father - heart disease)">
+            </div>
+            <p class="field-hint">Family history of diseases can increase your risk</p>
+          </div>
+        </section>
+
+        <!-- ── Section: Allergies & Medications ── -->
+        <section class="profile-section">
+          <h2>Allergies & Medications</h2>
+          <p class="section-desc">Critical for safe medication recommendations</p>
+
+          <div class="form-group">
+            <label for="profileAllergies">Allergies</label>
+            <div class="tag-input-wrap">
+              <div class="tags-container" id="allergiesTags"></div>
+              <input type="text" id="profileAllergies" placeholder="Type an allergy and press Enter (e.g. penicillin, peanuts)">
+            </div>
+            <p class="field-hint">Include drug allergies, food allergies, and environmental allergies</p>
+          </div>
+
+          <div class="form-group">
+            <label>Current Medications</label>
+            <div id="medicationsList" class="medications-list"></div>
+            <button type="button" id="addMedBtn" class="btn btn-outline btn-sm add-med-btn">+ Add Medication</button>
+          </div>
+        </section>
+
+        <!-- ── Section: Lifestyle ── -->
+        <section class="profile-section">
+          <h2>Lifestyle</h2>
+          <p class="section-desc">Affects treatment options and health risks</p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="profileSmoking">Smoking Status</label>
+              <select id="profileSmoking">
+                <option value="">Select</option>
+                <option value="never">Never</option>
+                <option value="former">Former (quit)</option>
+                <option value="current">Current smoker</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="profileAlcohol">Alcohol Use</label>
+              <select id="profileAlcohol">
+                <option value="">Select</option>
+                <option value="never">Never</option>
+                <option value="occasional">Occasional</option>
+                <option value="regular">Regular</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="profileExercise">Exercise</label>
+              <select id="profileExercise">
+                <option value="">Select</option>
+                <option value="none">None / Sedentary</option>
+                <option value="light">Light (walking, yoga)</option>
+                <option value="moderate">Moderate (3-4 times/week)</option>
+                <option value="intense">Intense (daily workout)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="profileDiet">Dietary Restrictions</label>
+            <div class="tag-input-wrap">
+              <div class="tags-container" id="dietTags"></div>
+              <input type="text" id="profileDiet" placeholder="Type and press Enter (e.g. vegetarian, gluten-free)">
+            </div>
+          </div>
+        </section>
+
+        <!-- ── Section: Emergency Contact ── -->
+        <section class="profile-section">
+          <h2>Emergency Contact</h2>
+          <p class="section-desc">Optional — for reference in emergency situations</p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="profileEmergName">Contact Name</label>
+              <input type="text" id="profileEmergName" placeholder="e.g. Priya Gopiraj">
+            </div>
+            <div class="form-group">
+              <label for="profileEmergPhone">Contact Phone</label>
+              <input type="tel" id="profileEmergPhone" placeholder="e.g. +91 98765 43210">
+            </div>
+          </div>
+        </section>
+
+        <!-- ── Actions ── -->
+        <div class="profile-actions">
+          <button type="submit" class="btn btn-primary btn-lg" id="saveProfileBtn">
+            Save Health Profile
+          </button>
+          <p id="profileStatus" class="form-status"></p>
+        </div>
+      </form>
+
+      <div class="profile-info-box">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        <div>
+          <strong>Your data stays private.</strong> Health information is stored securely and only used to personalize your AI conversations. It is never shared with third parties.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="js/auth.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>

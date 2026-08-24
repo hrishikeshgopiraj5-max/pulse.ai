@@ -6,6 +6,7 @@ const { Router } = require("express");
 const authRoutes = require("./auth");
 const earlyAccessRoutes = require("./earlyAccess");
 const chatRoutes = require("./chat");
+const healthProfileRoutes = require("./healthProfile");
 const { success } = require("../../lib/response");
 
 const router = Router();
@@ -26,5 +27,6 @@ router.get("/health", (req, res) => {
 router.use("/auth", authRoutes);
 router.use("/early-access", earlyAccessRoutes);
 router.use("/chat", chatRoutes);
+router.use("/health-profile", healthProfileRoutes);
 
 module.exports = router;

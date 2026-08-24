@@ -5,6 +5,7 @@
 
 const { v4: uuidv4 } = require("uuid");
 const Chat = require("../models/Chat");
+const { HealthProfile } = require("../models");
 const { chat } = require("../lib/ai");
 const { searchKnowledge } = require("../lib/medical-knowledge");
 const { NotFoundError } = require("../lib/errors");
@@ -128,13 +129,22 @@ const AIService = {
     // Build history for AI context (last 12 messages)
     const historyForAI = messages.slice(-12).map(({ role, content }) => ({ role, content }));
 
+    // Get user's health profile for personalized context
+    let healthContext = null;
+    try {
+      const profile = await HealthProfile.findByUserId(userId);
+      healthContext = HealthProfile.buildSummary(profile);
+    } catch (profileErr) {
+      // Don't fail chat if profile lookup fails
+    }
+
     // Search knowledge base for analytics (which topics matched)
     const kbResults = searchKnowledge(message);
     const matchedTopics = kbResults.flatMap((r) => r.matchedKeywords || []);
     const isEmergency = detectEmergency(message);
 
-    // Call AI (model fallback happens silently)
-    const { content } = await chat(message, historyForAI);
+    // Call AI with health profile context (model fallback happens silently)
+    const { content } = await chat(message, historyForAI, healthContext);
 
     // Track analytics
     trackQuery(message, matchedTopics, null, isEmergency);
