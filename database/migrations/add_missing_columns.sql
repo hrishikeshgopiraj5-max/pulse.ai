@@ -4,6 +4,14 @@
 -- Safe to run multiple times (uses IF NOT EXISTS)
 -- ============================================================
 
+-- Add name column if missing (required by signup flow)
+ALTER TABLE early_access_signups
+  ADD COLUMN IF NOT EXISTS name VARCHAR(255);
+
+-- Add status column if missing
+ALTER TABLE early_access_signups
+  ADD COLUMN IF NOT EXISTS status VARCHAR(20) NOT NULL DEFAULT 'pending';
+
 -- Add updated_at column if missing
 ALTER TABLE early_access_signups
   ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
@@ -23,6 +31,11 @@ ALTER TABLE early_access_signups
 -- Add firebase_uid column if missing
 ALTER TABLE early_access_signups
   ADD COLUMN IF NOT EXISTS firebase_uid VARCHAR(255);
+
+-- Add CHECK constraint if missing
+ALTER TABLE early_access_signups
+  ADD CONSTRAINT early_access_status_check
+  CHECK (status IN ('pending', 'approved', 'rejected'));
 
 -- Add indexes if missing
 CREATE INDEX IF NOT EXISTS idx_early_access_email ON early_access_signups(email);
