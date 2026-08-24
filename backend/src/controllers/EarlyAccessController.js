@@ -6,6 +6,7 @@
 
 const EarlyAccessService = require("../services/EarlyAccessService");
 const AIService = require("../services/AIService");
+const EmailService = require("../services/EmailService");
 const { success } = require("../lib/response");
 const logger = require("../lib/logger");
 
@@ -76,8 +77,18 @@ const EarlyAccessController = {
    */
   async approve(req, res, next) {
     try {
+      // Get user info before approving (for email)
+      const user = await EarlyAccessService.getStatusById(req.params.id);
       const result = await EarlyAccessService.approve(req.params.id, req.body.admin_note);
       logger.info({ id: req.params.id }, "Early access approved");
+
+      // Send approval email (non-blocking — don't fail the request if email fails)
+      if (user && user.email) {
+        EmailService.sendApprovalEmail(user.email, user.name).catch((err) => {
+          logger.error({ err: err.message, email: user.email }, "Failed to send approval email");
+        });
+      }
+
       res.json(success("User approved.", result));
     } catch (err) {
       next(err);
@@ -89,8 +100,18 @@ const EarlyAccessController = {
    */
   async reject(req, res, next) {
     try {
+      // Get user info before rejecting (for email)
+      const user = await EarlyAccessService.getStatusById(req.params.id);
       const result = await EarlyAccessService.reject(req.params.id, req.body.admin_note);
       logger.info({ id: req.params.id }, "Early access rejected");
+
+      // Send rejection email (non-blocking)
+      if (user && user.email) {
+        EmailService.sendRejectionEmail(user.email, user.name).catch((err) => {
+          logger.error({ err: err.message, email: user.email }, "Failed to send rejection email");
+        });
+      }
+
       res.json(success("User rejected.", result));
     } catch (err) {
       next(err);

@@ -51,6 +51,11 @@ const Auth = (() => {
     return cred.user;
   }
 
+  // ─── Password Reset ─────────────────────────────────────
+  async function sendPasswordReset(email) {
+    return auth.sendPasswordResetEmail(email);
+  }
+
   // ─── Google Sign-In ──────────────────────────────────────
   async function signInWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -85,6 +90,7 @@ const Auth = (() => {
     register,
     login,
     signInWithGoogle,
+    sendPasswordReset,
     logout,
     getIdToken,
     getUser,

@@ -44,6 +44,17 @@ const EarlyAccessService = {
     };
   },
 
+  async getStatusById(id) {
+    const entry = await EarlyAccess.findById(id);
+    if (!entry) return null;
+    return {
+      id: entry.id,
+      email: entry.email,
+      name: entry.name,
+      status: entry.status,
+    };
+  },
+
   async approve(id, admin_note) {
     const entry = await EarlyAccess.findById(id);
     if (!entry) throw new NotFoundError("Sign-up not found.");

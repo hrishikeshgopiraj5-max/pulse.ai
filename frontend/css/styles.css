@@ -1119,6 +1119,21 @@ section.alt {
   flex-shrink: 0;
 }
 
+/* ─── Forgot Password Link ─────────────────────────────── */
+.forgot-link {
+  display: block;
+  text-align: right;
+  font-size: 13px;
+  color: var(--ink-muted);
+  text-decoration: none;
+  margin-top: -4px;
+  margin-bottom: 4px;
+}
+.forgot-link:hover {
+  color: var(--red);
+  text-decoration: underline;
+}
+
 /* Early access signup form - multi-field */
 .early-access-signup {
   flex-direction: column;

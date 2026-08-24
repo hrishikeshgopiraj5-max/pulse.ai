@@ -74,6 +74,13 @@ const config = Object.freeze({
   // Admin
   ADMIN_SECRET_KEY: process.env.ADMIN_SECRET_KEY || "",
 
+  // SMTP Email
+  SMTP_HOST: process.env.SMTP_HOST || "",
+  SMTP_PORT: process.env.SMTP_PORT || "587",
+  SMTP_USER: process.env.SMTP_USER || "",
+  SMTP_PASS: process.env.SMTP_PASS || "",
+  SMTP_FROM: process.env.SMTP_FROM || "",
+
   // OpenRouter AI
   OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY || "",
   OPENROUTER_BASE_URL: process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1",

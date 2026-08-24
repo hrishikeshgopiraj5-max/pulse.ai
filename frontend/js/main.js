@@ -69,6 +69,36 @@
   if (authClose) authClose.addEventListener('click', closeAuthModal);
   if (authBackdrop) authBackdrop.addEventListener('click', closeAuthModal);
 
+  // ─── Forgot Password ────────────────────────────────────
+  const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+  if (forgotPasswordLink) {
+    forgotPasswordLink.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      if (!email) {
+        loginError.textContent = 'Enter your email above, then click Forgot password.';
+        loginError.style.color = '';
+        return;
+      }
+      try {
+        loginError.textContent = 'Sending reset email...';
+        loginError.style.color = 'var(--ink-muted)';
+        await Auth.sendPasswordReset(email);
+        loginError.textContent = `Reset email sent to ${email}. Check your inbox.`;
+        loginError.style.color = '#1E7A46';
+      } catch (err) {
+        if (err.code === 'auth/user-not-found') {
+          loginError.textContent = 'No account found with this email.';
+        } else if (err.code === 'auth/invalid-email') {
+          loginError.textContent = 'Invalid email address.';
+        } else {
+          loginError.textContent = 'Could not send reset email. Try again.';
+        }
+        loginError.style.color = '';
+      }
+    });
+  }
+
   // ─── Login form ──────────────────────────────────────────
   let loginInProgress = false;
   if (loginForm) {
