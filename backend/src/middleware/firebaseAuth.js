@@ -18,24 +18,35 @@ let auth = null;
 let firebaseReady = false;
 
 try {
-  if (config.FIREBASE_PROJECT_ID && config.FIREBASE_CLIENT_EMAIL && config.FIREBASE_PRIVATE_KEY) {
-    const { initializeApp, cert, getApps } = require("firebase-admin/app");
-    const { getAuth } = require("firebase-admin/auth");
+  const { initializeApp, cert, getApps } = require("firebase-admin/app");
+  const { getAuth } = require("firebase-admin/auth");
 
-    // Fix newlines in private key — Render stores them as literal \n
+  let serviceAccount = null;
+
+  // Option 1: Full service account JSON (recommended — avoids newline issues)
+  if (config.FIREBASE_SERVICE_ACCOUNT) {
+    try {
+      serviceAccount = JSON.parse(config.FIREBASE_SERVICE_ACCOUNT);
+    } catch (parseErr) {
+      logger.error({ err: parseErr.message }, "FIREBASE_SERVICE_ACCOUNT is not valid JSON");
+    }
+  }
+
+  // Option 2: Individual env vars (legacy — may have newline issues on Render)
+  if (!serviceAccount && config.FIREBASE_PROJECT_ID && config.FIREBASE_CLIENT_EMAIL && config.FIREBASE_PRIVATE_KEY) {
     const privateKey = config.FIREBASE_PRIVATE_KEY
       .replace(/\\\\n/g, "\n")
-      .replace(/\\n/g, "\n");
+      .replace(/\\n/g, "\n")
+      .replace(/\n/g, "\n");
+    serviceAccount = {
+      projectId: config.FIREBASE_PROJECT_ID,
+      clientEmail: config.FIREBASE_CLIENT_EMAIL,
+      privateKey: privateKey,
+    };
+  }
 
-    if (getApps().length === 0) {
-      initializeApp({
-        credential: cert({
-          projectId: config.FIREBASE_PROJECT_ID,
-          clientEmail: config.FIREBASE_CLIENT_EMAIL,
-          privateKey: privateKey,
-        }),
-      });
-    }
+  if (serviceAccount && getApps().length === 0) {
+    initializeApp({ credential: cert(serviceAccount) });
     auth = getAuth();
     firebaseReady = true;
   }
