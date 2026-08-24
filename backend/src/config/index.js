@@ -54,6 +54,8 @@ const config = Object.freeze({
   JWT_REFRESH_EXPIRES: process.env.JWT_REFRESH_EXPIRES || "7d",
 
   // CORS
+  // In production, set CORS_ORIGINS=https://your-app.vercel.app
+  // For Vercel previews, you may need a wildcard pattern.
   CORS_ORIGINS: process.env.CORS_ORIGINS
     ? process.env.CORS_ORIGINS.split(",").map((o) => o.trim())
     : ["http://localhost:3000", "http://localhost:8000", "http://127.0.0.1:3000"],

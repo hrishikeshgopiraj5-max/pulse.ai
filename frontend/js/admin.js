@@ -71,12 +71,18 @@
           adminKeyInput.value = '';
           adminKeyInput.focus();
         } else if (verifyRes.status === 503) {
-          adminLoginError.textContent = 'Admin authentication is not configured on the server. Contact the developer.';
+          adminLoginError.textContent = 'Admin auth is not configured on the server. The ADMIN_SECRET_KEY environment variable must be set on Render.';
         } else {
           adminLoginError.textContent = 'Something went wrong. Please try again.';
         }
       } catch (err) {
-        adminLoginError.textContent = 'Could not reach the server. Check your connection.';
+        // Distinguish CORS / network / other errors
+        if (err instanceof TypeError && err.message === 'Failed to fetch') {
+          // Most likely CORS or network — server unreachable from browser
+          adminLoginError.textContent = 'Cannot reach the server. This is usually a CORS or network issue. Make sure the backend is running and CORS_ORIGINS includes this domain.';
+        } else {
+          adminLoginError.textContent = 'Could not reach the server. Check your connection.';
+        }
       } finally {
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;
