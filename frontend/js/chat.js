@@ -34,29 +34,40 @@
       return;
     }
 
-    // Only check approval status once on page load (not on every auth change)
+    // Only check approval status once on page load
     if (!authChecked) {
       authChecked = true;
+
+      // First: check approval via email (works without Firebase Admin)
       try {
         const statusRes = await fetch(`${API}/early-access/status?email=${encodeURIComponent(user.email)}`);
         const statusData = await statusRes.json().catch(() => ({}));
         const userStatus = statusData?.data?.status;
+
         if (!statusRes.ok || !userStatus || userStatus !== 'approved') {
+          // Not approved — sign out and redirect
           await Auth.logout().catch(() => {});
           window.location.href = '/';
           return;
         }
+
+        // Approved — now get a backend JWT session token
+        try {
+          await Auth.createBackendSession(user.email, user.uid);
+        } catch (sessionErr) {
+          console.warn('Could not create backend session:', sessionErr.message);
+          // Chat will still work if backend JWT was already stored
+        }
       } catch (networkErr) {
-        // Network error on page load — show warning but let them stay
-        // Chat will handle 403s when they try to send a message
+        // Network error — let them stay, chat will handle 403s on send
         console.warn('Could not verify approval status:', networkErr.message);
       }
     }
 
     // Show user info
     const displayName = user.displayName || user.email.split('@')[0];
-    userName.textContent = displayName;
-    userAvatar.textContent = displayName.charAt(0).toUpperCase();
+    if (userName) userName.textContent = displayName;
+    if (userAvatar) userAvatar.textContent = displayName.charAt(0).toUpperCase();
 
     // Load conversations
     loadConversations();
@@ -77,10 +88,7 @@
   // ─── Load conversations list ───────────────────────────────
   async function loadConversations() {
     try {
-      const token = await Auth.getIdToken();
-      const res = await fetch(`${API}/chat/conversations`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
+      const res = await Auth.authedFetch(`${API}/chat/conversations`);
       if (!res.ok) return;
 
       const data = await res.json();
@@ -122,10 +130,7 @@
   // ─── Load a specific conversation ──────────────────────────
   async function loadConversation(id) {
     try {
-      const token = await Auth.getIdToken();
-      const res = await fetch(`${API}/chat/${id}`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
+      const res = await Auth.authedFetch(`${API}/chat/${id}`);
       if (!res.ok) return;
 
       const data = await res.json();
@@ -155,11 +160,7 @@
   // ─── Delete conversation ───────────────────────────────────
   async function deleteConversation(id) {
     try {
-      const token = await Auth.getIdToken();
-      await fetch(`${API}/chat/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
+      await Auth.authedFetch(`${API}/chat/${id}`, { method: 'DELETE' });
 
       if (currentConversationId === id) {
         currentConversationId = null;
@@ -283,23 +284,9 @@
     showTyping();
 
     try {
-      const token = await Auth.getIdToken();
-      if (!token) {
-        removeTyping();
-        addMessage('assistant', 'Your session has expired. Please log in again.');
-        setTimeout(async () => {
-          await Auth.logout().catch(() => {});
-          window.location.href = '/';
-        }, 2000);
-        return;
-      }
-
-      const res = await fetch(`${API}/chat`, {
+      // Use backend JWT for chat API calls
+      const res = await Auth.authedFetch(`${API}/chat`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
         body: JSON.stringify({ conversationId: currentConversationId, message: text.trim() }),
       });
 
@@ -328,6 +315,8 @@
         }, 3000);
       } else if (res.status === 429) {
         addMessage('assistant', 'You\'re sending messages too quickly. Please wait a moment and try again.');
+      } else if (res.status === 503) {
+        addMessage('assistant', 'The chat service is temporarily unavailable. Please try again in a moment.');
       } else {
         addMessage('assistant', data.detail || 'Something went wrong. Please try again.');
       }

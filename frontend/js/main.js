@@ -168,7 +168,14 @@
           return;
         }
 
-        // Step 3: Approved — grant access
+        // Step 3: Approved — create backend JWT session
+        loginError.textContent = 'Setting up your session...';
+        try {
+          await Auth.createBackendSession(email, null);
+        } catch (sessionErr) {
+          console.warn('Backend session creation failed:', sessionErr.message);
+          // Chat will retry session creation on first message
+        }
         loginError.textContent = '';
         loginError.style.color = '';
         closeAuthModal();
@@ -236,7 +243,12 @@
         const statusData = await statusRes.json();
         const userStatus = statusData?.data?.status;
         if (statusRes.ok && userStatus === 'approved') {
-          // Approved user on landing page → redirect to chat
+          // Approved user on landing page → create backend session, then redirect to chat
+          try {
+            await Auth.createBackendSession(user.email, user.uid);
+          } catch (sessionErr) {
+            console.warn('Backend session creation failed:', sessionErr.message);
+          }
           window.location.href = '/chat.html';
           return;
         }
@@ -280,13 +292,6 @@
     return map[code] || 'Something went wrong. Please try again.';
   }
 
-  // ─── Helper: authed fetch ────────────────────────────────
-  async function authedFetch(url, options = {}) {
-    const token = await Auth.getIdToken();
-    const headers = { ...options.headers, 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
-    return fetch(url, { ...options, headers });
-  }
 
   // ─── Early-access form ───────────────────────────────────
   const form = document.getElementById('earlyAccessForm');
@@ -516,6 +521,13 @@
           return;
         }
 
+        // Approved — create backend JWT session
+        loginError.textContent = 'Setting up your session...';
+        try {
+          await Auth.createBackendSession(user.email, user.uid);
+        } catch (sessionErr) {
+          console.warn('Backend session creation failed:', sessionErr.message);
+        }
         loginError.textContent = '';
         closeAuthModal();
 
@@ -607,11 +619,12 @@
     showTyping();
 
     try {
-      const res = await authedFetch(`${API}/chat`, {
+      // Use Auth.authedFetch which handles backend JWT tokens
+      const res = await Auth.authedFetch(`${API}/chat`, {
         method: 'POST',
         body: JSON.stringify({ conversationId, message: text.trim() }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       removeTyping();
 
