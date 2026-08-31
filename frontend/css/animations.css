@@ -1,0 +1,417 @@
+/* ============================================================
+   Pulse AI — Animations & 3D Effects
+   ============================================================ */
+
+/* ---------- Prefers Reduced Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---------- Base: Hidden until animated ---------- */
+.anim-hidden {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.anim-hidden.anim-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered children */
+.anim-stagger > * {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.anim-stagger.anim-visible > *:nth-child(1) { transition-delay: 0s; opacity: 1; transform: translateY(0); }
+.anim-stagger.anim-visible > *:nth-child(2) { transition-delay: 0.08s; opacity: 1; transform: translateY(0); }
+.anim-stagger.anim-visible > *:nth-child(3) { transition-delay: 0.16s; opacity: 1; transform: translateY(0); }
+.anim-stagger.anim-visible > *:nth-child(4) { transition-delay: 0.24s; opacity: 1; transform: translateY(0); }
+.anim-stagger.anim-visible > *:nth-child(5) { transition-delay: 0.32s; opacity: 1; transform: translateY(0); }
+.anim-stagger.anim-visible > *:nth-child(6) { transition-delay: 0.40s; opacity: 1; transform: translateY(0); }
+
+/* Slide from left */
+.anim-slide-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.anim-slide-left.anim-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Slide from right */
+.anim-slide-right {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.anim-slide-right.anim-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Scale in */
+.anim-scale {
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.anim-scale.anim-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ---------- Hero Entrance Animations ---------- */
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroFadeRight {
+  from {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes heroPulseLine {
+  from {
+    stroke-dashoffset: 600;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.hero-copy {
+  animation: heroFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.hero-visual {
+  animation: heroFadeRight 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+
+.hero-copy .eyebrow {
+  animation: heroFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.hero-copy h1 {
+  animation: heroFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+}
+
+.hero-copy .lead {
+  animation: heroFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+}
+
+.hero-copy .hero-ctas {
+  animation: heroFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.65s both;
+}
+
+.hero-copy .hero-note {
+  animation: heroFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.8s both;
+}
+
+/* Pulse graph stroke animation */
+.hero-visual .pg-path {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: heroPulseLine 2.5s cubic-bezier(0.16, 1, 0.3, 1) 1s forwards;
+}
+
+/* Floating chips */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-12px) rotate(1deg); }
+  50% { transform: translateY(-6px) rotate(-0.5deg); }
+  75% { transform: translateY(-14px) rotate(0.5deg); }
+}
+
+.float-chip {
+  animation: float 6s ease-in-out infinite;
+}
+
+.float-chip.chip-2 {
+  animation-delay: -2s;
+}
+
+/* Panel card entrance */
+@keyframes panelReveal {
+  from {
+    opacity: 0;
+    transform: perspective(800px) rotateY(8deg) translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(800px) rotateY(0) translateX(0);
+  }
+}
+
+.hero-visual .panel {
+  animation: panelReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+}
+
+/* ---------- 3D Card Hover Effects ---------- */
+.feat-card,
+.problem-card,
+.road-card,
+.team-card {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.feat-card:hover,
+.problem-card:hover,
+.road-card:hover,
+.team-card:hover {
+  transform: translateY(-8px) perspective(600px) rotateX(2deg) rotateY(-1deg);
+  box-shadow: 0 20px 40px -12px rgba(20, 23, 26, 0.15),
+              0 8px 16px -8px rgba(20, 23, 26, 0.1);
+}
+
+/* 3D tilt on feature cards */
+.feat-card {
+  transform-style: preserve-3d;
+}
+
+.feat-card .feat-icon {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.feat-card:hover .feat-icon {
+  transform: translateZ(12px) scale(1.1);
+}
+
+/* Problem card number glow */
+.problem-card .problem-num {
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+.problem-card:hover .problem-num {
+  color: var(--red, #DC2F3D);
+  text-shadow: 0 0 20px rgba(220, 47, 61, 0.3);
+}
+
+/* Road card active pulse */
+.road-card.active {
+  position: relative;
+  overflow: hidden;
+}
+
+.road-card.active::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(135deg, var(--red, #DC2F3D), transparent, var(--red, #DC2F3D));
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.road-card.active:hover::before {
+  opacity: 0.15;
+}
+
+/* Team card photo glow */
+.team-card .team-avatar {
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.team-card:hover .team-avatar {
+  transform: scale(1.05) translateZ(8px);
+  box-shadow: 0 8px 24px -8px rgba(220, 47, 61, 0.3);
+}
+
+/* ---------- Why List Item Animations ---------- */
+.why-item {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.why-item:hover {
+  transform: translateX(6px);
+}
+
+.why-mark span {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s;
+}
+
+.why-item:hover .why-mark span {
+  transform: scale(1.3);
+  box-shadow: 0 0 12px rgba(220, 47, 61, 0.4);
+}
+
+/* ---------- Flow Step Animations ---------- */
+.flow-step {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.flow-step:hover {
+  transform: translateY(-6px);
+}
+
+.flow-node {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s,
+              background 0.3s;
+}
+
+.flow-step:hover .flow-node {
+  transform: scale(1.15) translateZ(10px);
+  box-shadow: 0 8px 20px -4px rgba(220, 47, 61, 0.35);
+  background: var(--red, #DC2F3D);
+  color: white;
+}
+
+/* ---------- Step Number Animations ---------- */
+.step-num {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.3s;
+}
+
+.step:hover .step-num {
+  transform: scale(1.2);
+  color: var(--red, #DC2F3D);
+}
+
+/* ---------- CTA Button Pulse ---------- */
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(220, 47, 61, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(220, 47, 61, 0); }
+}
+
+.hero .btn-primary {
+  animation: ctaPulse 2.5s ease-in-out infinite;
+}
+
+.hero .btn-primary:hover {
+  animation: none;
+  box-shadow: 0 4px 16px rgba(220, 47, 61, 0.4);
+}
+
+/* ---------- Parallax Pulse Lines ---------- */
+@keyframes pulseWave {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.pulse-rule path {
+  stroke-dasharray: 12 6;
+  animation: pulseWave 4s linear infinite;
+}
+
+/* ---------- Vision Section Glow ---------- */
+@keyframes visionGlow {
+  0%, 100% { box-shadow: inset 0 0 60px rgba(220, 47, 61, 0.05); }
+  50% { box-shadow: inset 0 0 80px rgba(220, 47, 61, 0.1); }
+}
+
+.vision-inner {
+  animation: visionGlow 4s ease-in-out infinite;
+}
+
+/* ---------- Chat Widget Float ---------- */
+@keyframes chatFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.chat-toggle {
+  animation: chatFloat 3s ease-in-out infinite;
+}
+
+.chat-toggle:hover {
+  animation: none;
+  transform: scale(1.1);
+}
+
+/* ---------- Logo Pulse ---------- */
+@keyframes logoPulse {
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(220, 47, 61, 0)); }
+  50% { filter: drop-shadow(0 0 6px rgba(220, 47, 61, 0.3)); }
+}
+
+.logo-mark {
+  animation: logoPulse 3s ease-in-out infinite;
+}
+
+/* ---------- Nav Link Underline ---------- */
+.nav-links a {
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--red, #DC2F3D);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 1px;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* ---------- Early Access Form Glow ---------- */
+@keyframes formGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(220, 47, 61, 0); }
+  50% { box-shadow: 0 0 30px -5px rgba(220, 47, 61, 0.1); }
+}
+
+.early-access-form:focus-within {
+  animation: formGlow 2s ease-in-out infinite;
+}
+
+/* ---------- Tag Badge Animation ---------- */
+.badge-future {
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+/* ---------- Responsive: Disable heavy animations on mobile ---------- */
+@media (max-width: 768px) {
+  .float-chip { animation: none; }
+  .hero-visual .panel { animation: heroFadeUp 0.7s ease both; }
+  .feat-card:hover,
+  .problem-card:hover,
+  .road-card:hover {
+    transform: translateY(-4px);
+  }
+}

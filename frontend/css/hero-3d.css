@@ -1,0 +1,156 @@
+/* ============================================================
+   Pulse AI — Hero 3D Canvas & Anime.js States
+   ============================================================ */
+
+/* ---------- Hero Canvas ---------- */
+.hero-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+/* ---------- Anime.js Hidden States ---------- */
+.anime-hidden {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.anime-fade-left {
+  opacity: 0;
+  transform: translateX(-60px);
+}
+
+.anime-fade-right {
+  opacity: 0;
+  transform: translateX(60px);
+}
+
+.anime-scale-in {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.anime-rotate-in {
+  opacity: 0;
+  transform: rotateY(30deg) scale(0.9);
+}
+
+/* ---------- 3D Text Reveal ---------- */
+.anime-text-reveal {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.anime-text-reveal.anime-visible {
+  clip-path: inset(0 0% 0 0);
+}
+
+/* ---------- SVG Path Morph States ---------- */
+.morph-path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.morph-path.anime-visible {
+  stroke-dashoffset: 0;
+}
+
+/* ---------- Particle Field ---------- */
+.particle-field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ---------- Floating Medical Icons ---------- */
+.floating-icon {
+  position: absolute;
+  opacity: 0;
+  transform: translateY(20px) scale(0.8);
+  transition: opacity 0.6s, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+.floating-icon.anime-visible {
+  opacity: 0.15;
+  transform: translateY(0) scale(1);
+}
+
+/* ---------- Counter Animation ---------- */
+.counter-value {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.counter-value.anime-visible {
+  transform: scale(1.1);
+}
+
+/* ---------- Stagger Grid Items ---------- */
+.stagger-grid > * {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.stagger-grid.anime-visible > * {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stagger-grid.anime-visible > *:nth-child(1) { transition-delay: 0s; }
+.stagger-grid.anime-visible > *:nth-child(2) { transition-delay: 0.1s; }
+.stagger-grid.anime-visible > *:nth-child(3) { transition-delay: 0.2s; }
+.stagger-grid.anime-visible > *:nth-child(4) { transition-delay: 0.3s; }
+.stagger-grid.anime-visible > *:nth-child(5) { transition-delay: 0.4s; }
+.stagger-grid.anime-visible > *:nth-child(6) { transition-delay: 0.5s; }
+
+/* ---------- Glow Pulse on Scroll ---------- */
+.scroll-glow {
+  position: relative;
+}
+
+.scroll-glow::after {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(circle, rgba(220, 47, 61, 0.08) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.6s;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.scroll-glow.anime-visible::after {
+  opacity: 1;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .hero-canvas {
+    opacity: 0.4;
+  }
+  .floating-icon {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-canvas {
+    display: none;
+  }
+}

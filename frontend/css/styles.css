@@ -1599,13 +1599,13 @@ footer {
   border-radius: 14px;
   font-size: 14px;
   line-height: 1.55;
-  white-space: pre-wrap;
 }
 
 .chat-msg.user .chat-msg-bubble {
   background: var(--ink);
   color: var(--white);
   border-radius: 14px 14px 4px 14px;
+  white-space: pre-wrap;
 }
 
 .chat-msg.assistant .chat-msg-bubble {
@@ -1634,6 +1634,82 @@ footer {
 @keyframes typing-bounce {
   0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
   30% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* ---------- Markdown in Chat Widget Bubbles ---------- */
+.chat-msg-bubble h1,
+.chat-msg-bubble h2,
+.chat-msg-bubble h3,
+.chat-msg-bubble h4,
+.chat-msg-bubble h5,
+.chat-msg-bubble h6 {
+  margin: 10px 0 4px;
+  line-height: 1.3;
+}
+.chat-msg-bubble h1:first-child,
+.chat-msg-bubble h2:first-child,
+.chat-msg-bubble h3:first-child { margin-top: 0; }
+.chat-msg-bubble h1 { font-size: 1.15em; }
+.chat-msg-bubble h2 { font-size: 1.08em; }
+
+.chat-msg-bubble p {
+  margin: 0 0 6px;
+  line-height: 1.55;
+}
+.chat-msg-bubble p:last-child { margin-bottom: 0; }
+
+.chat-msg-bubble ul,
+.chat-msg-bubble ol {
+  margin: 4px 0 6px;
+  padding-left: 20px;
+  line-height: 1.55;
+}
+.chat-msg-bubble li { margin-bottom: 2px; }
+
+.chat-msg-bubble strong { font-weight: 600; }
+.chat-msg-bubble em { font-style: italic; }
+
+.chat-msg-bubble code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85em;
+  background: rgba(0, 0, 0, 0.06);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+.chat-msg.user .chat-msg-bubble code {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.chat-msg-bubble pre {
+  margin: 6px 0;
+  background: var(--ink);
+  color: #e0e0e8;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+.chat-msg-bubble pre code {
+  display: block;
+  padding: 10px 12px;
+  background: none;
+  color: inherit;
+  font-size: 0.82em;
+  line-height: 1.45;
+  border-radius: 0;
+}
+
+.chat-msg-bubble blockquote {
+  margin: 6px 0;
+  padding: 6px 12px;
+  border-left: 3px solid var(--red);
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 0 6px 6px 0;
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.chat-msg-bubble a {
+  color: var(--red);
+  text-decoration: underline;
 }
 
 .chat-input-area {

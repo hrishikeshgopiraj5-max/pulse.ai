@@ -230,7 +230,11 @@
 
     const bubble = document.createElement('div');
     bubble.className = 'chat-msg-bubble';
-    bubble.textContent = content;
+    if (role === 'assistant' && typeof Markdown !== 'undefined') {
+      bubble.innerHTML = Markdown.render(content);
+    } else {
+      bubble.textContent = content;
+    }
 
     div.appendChild(avatar);
     div.appendChild(bubble);

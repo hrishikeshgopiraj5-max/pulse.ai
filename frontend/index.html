@@ -23,6 +23,9 @@
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/three-d.css">
+  <link rel="stylesheet" href="css/hero-3d.css">
 
   <!-- API Configuration -->
   <script>window.__PULSE_API_URL__ = 'https://pulse-ai-r2d1.onrender.com/api/v1';</script>
@@ -65,6 +68,8 @@
 
     <!-- ========== HERO ========== -->
     <section class="hero">
+      <!-- Three.js Canvas -->
+      <canvas id="heroCanvas" class="hero-canvas"></canvas>
       <div class="wrap">
         <div class="hero-copy">
           <span class="eyebrow">Early-stage · Building in the open</span>
@@ -75,8 +80,15 @@
             <a href="#solution" class="btn btn-secondary">Explore Pulse AI</a>
           </div>
           <p class="hero-note">Pulse AI is an information &amp; navigation platform — not a doctor, and not a diagnostic tool.</p>
-        </div>
-        <div class="hero-visual">
+        </div>          <div class="hero-visual">
+          <!-- 3D Orbiting Spheres -->
+          <div class="hero-orbit">
+            <div class="orbit-dot"></div>
+            <div class="orbit-dot"></div>
+            <div class="orbit-dot"></div>
+            <div class="orbit-dot"></div>
+            <div class="orbit-dot"></div>
+          </div>
           <div class="panel">
             <div class="panel-top">
               <span class="panel-label">PULSE AI — ASSISTANT</span>
@@ -261,6 +273,12 @@
       <div class="wrap">
         <div class="vision">
           <div class="vision-inner">
+        <!-- 3D Rotating Ring -->
+        <div class="vision-ring">
+          <div class="vision-ring-orbit"></div>
+          <div class="vision-ring-orbit"></div>
+          <div class="vision-ring-orbit"></div>
+        </div>
             <span class="eyebrow" style="color:#FF8A93;">Our vision</span>
             <h2>Making healthcare easier to understand, access, and navigate.</h2>
             <p>Long term, Pulse AI aims to bring together AI-powered guidance with doctors, pharmacists, healthcare providers, and pharmacy services — into one connected, trustworthy experience.</p>
@@ -481,19 +499,13 @@
   </div>
 
   <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+  <script src="js/markdown.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/main.js"></script>
-  <script>
-  const revealEls = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15 });
-  revealEls.forEach(el => observer.observe(el));
-</script>
+  <script src="js/animations.js"></script>
+  <script src="js/hero-3d.js"></script>
+  <script src="js/scroll-animations.js"></script>
 </body>
 </html>

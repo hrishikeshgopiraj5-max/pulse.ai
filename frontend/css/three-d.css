@@ -1,0 +1,500 @@
+/* ============================================================
+   Pulse AI — 3D Animations & Transitions
+   ============================================================ */
+
+/* ---------- 3D Scene: Hero Medical Cross ---------- */
+.hero-3d-scene {
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
+  width: 180px;
+  height: 180px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+.hero-3d-cross {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: crossRotate3D 8s ease-in-out infinite;
+}
+
+.hero-3d-cross .cross-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-3d-cross .cross-face svg {
+  width: 80px;
+  height: 80px;
+  opacity: 0.12;
+}
+
+@keyframes crossRotate3D {
+  0%   { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+  25%  { transform: rotateX(15deg) rotateY(90deg) rotateZ(5deg); }
+  50%  { transform: rotateX(-10deg) rotateY(180deg) rotateZ(-5deg); }
+  75%  { transform: rotateX(10deg) rotateY(270deg) rotateZ(3deg); }
+  100% { transform: rotateX(0deg) rotateY(360deg) rotateZ(0deg); }
+}
+
+/* ---------- 3D Orbiting Spheres ---------- */
+.hero-orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  transform-style: preserve-3d;
+  animation: orbitSpin 20s linear infinite;
+  pointer-events: none;
+}
+
+.orbit-dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--red, #DC2F3D);
+  opacity: 0.2;
+  transform-style: preserve-3d;
+}
+
+.orbit-dot:nth-child(1) {
+  transform: rotateY(0deg) translateZ(150px);
+  animation: orbitPulse 3s ease-in-out infinite 0s;
+}
+
+.orbit-dot:nth-child(2) {
+  transform: rotateY(72deg) translateZ(130px);
+  width: 7px;
+  height: 7px;
+  opacity: 0.15;
+  animation: orbitPulse 3s ease-in-out infinite 0.6s;
+}
+
+.orbit-dot:nth-child(3) {
+  transform: rotateY(144deg) translateZ(160px);
+  width: 12px;
+  height: 12px;
+  opacity: 0.1;
+  animation: orbitPulse 3s ease-in-out infinite 1.2s;
+}
+
+.orbit-dot:nth-child(4) {
+  transform: rotateY(216deg) translateZ(120px);
+  width: 6px;
+  height: 6px;
+  opacity: 0.18;
+  animation: orbitPulse 3s ease-in-out infinite 1.8s;
+}
+
+.orbit-dot:nth-child(5) {
+  transform: rotateY(288deg) translateZ(145px);
+  width: 8px;
+  height: 8px;
+  opacity: 0.12;
+  animation: orbitPulse 3s ease-in-out infinite 2.4s;
+}
+
+@keyframes orbitSpin {
+  from { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(0deg); }
+  to   { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(360deg); }
+}
+
+@keyframes orbitPulse {
+  0%, 100% { opacity: 0.1; transform: var(--base-transform, none) scale(1); }
+  50%      { opacity: 0.3; transform: var(--base-transform, none) scale(1.4); }
+}
+
+/* ---------- 3D Perspective Section Scroll ---------- */
+.perspective-section {
+  transform-style: preserve-3d;
+  transform: perspective(1200px) rotateX(0deg);
+  transition: transform 0.1s linear;
+}
+
+.perspective-section.perspective-enter {
+  animation: sectionPerspective 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes sectionPerspective {
+  from {
+    transform: perspective(1200px) rotateX(4deg) translateY(60px);
+    opacity: 0.3;
+  }
+  to {
+    transform: perspective(1200px) rotateX(0deg) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ---------- 3D Flip Cards (Team + Roadmap) ---------- */
+.flip-card {
+  perspective: 800px;
+  cursor: default;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: inherit;
+  padding: inherit;
+  background: inherit;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* ---------- 3D Depth Stack on Feature Cards ---------- */
+.feat-card-3d {
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.feat-card-3d::before {
+  content: '';
+  position: absolute;
+  inset: 6px -4px -8px 4px;
+  background: var(--bg-alt, #f5f4f2);
+  border-radius: inherit;
+  z-index: -1;
+  transform: translateZ(-10px);
+  opacity: 0.6;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.35s;
+}
+
+.feat-card-3d::after {
+  content: '';
+  position: absolute;
+  inset: 12px -8px -16px 8px;
+  background: var(--bg-alt, #f5f4f2);
+  border-radius: inherit;
+  z-index: -2;
+  transform: translateZ(-20px);
+  opacity: 0.3;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.35s;
+}
+
+.feat-card-3d:hover::before {
+  transform: translateZ(-14px) translateY(4px);
+  opacity: 0.8;
+}
+
+.feat-card-3d:hover::after {
+  transform: translateZ(-24px) translateY(8px);
+  opacity: 0.5;
+}
+
+/* ---------- 3D Text Depth ---------- */
+.hero h1 {
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.04),
+    0 2px 0 rgba(0, 0, 0, 0.03),
+    0 3px 0 rgba(0, 0, 0, 0.02),
+    0 4px 0 rgba(0, 0, 0, 0.01);
+  transition: text-shadow 0.3s;
+}
+
+.hero h1:hover {
+  text-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.06),
+    0 4px 0 rgba(0, 0, 0, 0.05),
+    0 6px 0 rgba(0, 0, 0, 0.04),
+    0 8px 0 rgba(0, 0, 0, 0.03),
+    0 10px 0 rgba(0, 0, 0, 0.02),
+    0 12px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* ---------- 3D Section Divider ---------- */
+.section-3d-divider {
+  height: 60px;
+  perspective: 800px;
+  overflow: hidden;
+}
+
+.section-3d-divider::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--red, #DC2F3D), transparent);
+  transform: rotateX(60deg);
+  transform-origin: center;
+  opacity: 0.4;
+}
+
+/* ---------- 3D Rotating Ring (Vision Section) ---------- */
+.vision-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+  animation: ringOrbit 12s linear infinite;
+  pointer-events: none;
+  opacity: 0.15;
+}
+
+.vision-ring-orbit {
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--red, #DC2F3D);
+  border-radius: 50%;
+  transform-style: preserve-3d;
+}
+
+.vision-ring-orbit:nth-child(1) { transform: rotateX(70deg) rotateZ(0deg); }
+.vision-ring-orbit:nth-child(2) { transform: rotateX(70deg) rotateZ(60deg); }
+.vision-ring-orbit:nth-child(3) { transform: rotateX(70deg) rotateZ(120deg); }
+
+@keyframes ringOrbit {
+  from { transform: translate(-50%, -50%) rotateY(0deg); }
+  to   { transform: translate(-50%, -50%) rotateY(360deg); }
+}
+
+/* ---------- 3D Parallax Depth Layers ---------- */
+.depth-layer {
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.depth-layer-1 { transform: translateZ(10px); }
+.depth-layer-2 { transform: translateZ(20px); }
+.depth-layer-3 { transform: translateZ(30px); }
+
+/* ---------- 3D Card Shadow Depth ---------- */
+.road-card-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.road-card-3d:hover {
+  transform: translateZ(15px) rotateX(-2deg) rotateY(1deg);
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.05),
+    0 12px 24px rgba(0, 0, 0, 0.08),
+    0 24px 48px rgba(0, 0, 0, 0.04);
+}
+
+/* ---------- 3D Step Connector Line ---------- */
+.steps {
+  position: relative;
+  perspective: 800px;
+}
+
+.steps::before {
+  content: '';
+  position: absolute;
+  left: 24px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--red, #DC2F3D), transparent);
+  transform: rotateY(15deg);
+  transform-origin: left center;
+  opacity: 0.3;
+}
+
+/* ---------- 3D Hero Panel Depth ---------- */
+.hero-visual .panel {
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-visual:hover .panel {
+  transform: perspective(800px) rotateY(-3deg) rotateX(2deg) translateZ(10px);
+}
+
+/* ---------- 3D Flow Node Glow ---------- */
+.flow-node {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s;
+}
+
+.flow-step:hover .flow-node {
+  transform: translateZ(15px) scale(1.12);
+  box-shadow:
+    0 4px 12px rgba(220, 47, 61, 0.25),
+    0 0 30px rgba(220, 47, 61, 0.15);
+}
+
+/* ---------- 3D Problem Card Perspective ---------- */
+.problem-card {
+  transform-style: preserve-3d;
+  perspective: 600px;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s;
+}
+
+.problem-card:hover {
+  transform: translateZ(12px) rotateX(-1deg);
+}
+
+.problem-card .problem-num {
+  transform-style: preserve-3d;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.problem-card:hover .problem-num {
+  transform: translateZ(8px) scale(1.1);
+}
+
+/* ---------- 3D Why Item Depth ---------- */
+.why-item {
+  transform-style: preserve-3d;
+  perspective: 600px;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.why-item:hover {
+  transform: translateZ(8px) translateX(8px);
+}
+
+.why-mark {
+  transform-style: preserve-3d;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.why-item:hover .why-mark {
+  transform: translateZ(12px) scale(1.15);
+}
+
+/* ---------- 3D Nav Link Depth ---------- */
+.nav-links li {
+  transform-style: preserve-3d;
+}
+
+.nav-links a {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-links a:hover {
+  transform: translateZ(4px);
+}
+
+/* ---------- 3D Logo Spin ---------- */
+.logo-mark {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.logo:hover .logo-mark {
+  transform: rotateY(180deg);
+}
+
+/* ---------- 3D Button Press ---------- */
+.btn {
+  transform-style: preserve-3d;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn:active {
+  transform: translateZ(-2px) scale(0.97) !important;
+}
+
+/* ---------- 3D Early Access Card ---------- */
+.early-access-form {
+  transform-style: preserve-3d;
+  perspective: 800px;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.early-access-form:focus-within {
+  transform: perspective(800px) rotateX(1deg) translateZ(5px);
+}
+
+/* ---------- 3D Chat Widget ---------- */
+.chat-toggle {
+  transform-style: preserve-3d;
+}
+
+#chatWidget:hover .chat-toggle {
+  transform: perspective(400px) rotateY(-10deg) rotateX(5deg) scale(1.08);
+}
+
+/* ---------- 3D Section Perspective on Scroll ---------- */
+#problem,
+#solution,
+#features,
+#how,
+#vision,
+#roadmap,
+#team {
+  transform-style: preserve-3d;
+  perspective: 1200px;
+}
+
+/* ---------- 3D Animated Grid Background ---------- */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(220, 47, 61, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(220, 47, 61, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  transform: perspective(500px) rotateX(30deg);
+  transform-origin: center top;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+  animation: gridPulse 6s ease-in-out infinite;
+}
+
+@keyframes gridPulse {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1; }
+}
+
+/* ---------- Responsive: Reduce 3D on Mobile ---------- */
+@media (max-width: 768px) {
+  .hero-3d-scene { display: none; }
+  .hero-orbit { display: none; }
+  .vision-ring { display: none; }
+  .hero::after { display: none; }
+  .feat-card-3d::before,
+  .feat-card-3d::after { display: none; }
+
+  .hero h1:hover {
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.04),
+      0 2px 0 rgba(0, 0, 0, 0.03);
+  }
+}
